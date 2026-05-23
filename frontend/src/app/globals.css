@@ -16,6 +16,7 @@
 html {
   min-height: 100%;
   color-scheme: light;
+  font-size: 115%; /* Increase base font size to scale up all rem units */
 }
 
 body {
@@ -49,6 +50,8 @@ select {
 .app-shell {
   min-height: 100vh;
   padding: 2rem;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .topbar {
@@ -60,7 +63,7 @@ select {
 }
 
 .brand-block {
-  max-width: 46rem;
+  max-width: 38rem;
 }
 
 .brand-block h1,
@@ -80,6 +83,7 @@ select {
 .panel p,
 .small-muted {
   color: var(--muted);
+  font-size: 1.05rem;
 }
 
 .eyebrow,
@@ -89,7 +93,7 @@ select {
   margin-bottom: 0.45rem;
   color: #fff7ec;
   font-family: var(--font-mono), monospace;
-  font-size: 0.72rem;
+  font-size: 0.95rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   background: var(--accent);
@@ -109,58 +113,73 @@ select {
 .nav-chips,
 .subnav {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.75rem;
 }
 
 .nav-chip {
-  border: 1px solid var(--border);
-  border-radius: 0;
-  padding: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 11rem;
-  height: 11rem;
+  width: 9.5rem;
+  height: 9.5rem;
   background: linear-gradient(135deg, #f9e7a8, #f6c85a 55%, #e5a318);
   color: #5a3a00;
   text-align: center;
   font-size: 1.05rem;
   line-height: 1.15;
-  padding: 0.7rem;
   white-space: normal;
   text-wrap: balance;
   word-break: break-word;
   box-shadow: 0 10px 18px rgba(122, 84, 14, 0.18);
-  clip-path: polygon(
-    50% 4%,
-    61% 36%,
-    95% 36%,
-    67% 56%,
-    78% 90%,
-    50% 70%,
-    22% 90%,
-    33% 56%,
-    5% 36%,
-    39% 36%
-  );
+  clip-path: polygon(50% 4%, 61% 36%, 95% 36%, 67% 56%, 78% 90%, 50% 70%, 22% 90%, 33% 56%, 5% 36%, 39% 36%);
   position: relative;
   cursor: pointer;
   transition: border-color 180ms ease, color 180ms ease, transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
 }
-.nav-chip > span {
+
+.nav-chip>span {
+  transform: translateY(8px); /* Center text within the star shape visually */
+}
+
+.subnav-chip {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1.2rem;
+  padding: 0.8rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f9e7a8, #f6c85a 55%, #e5a318);
+  color: #5a3a00;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  box-shadow: 0 10px 18px rgba(122, 84, 14, 0.18);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.subnav-chip:hover,
+.subnav-chip.active {
+  border-color: rgba(181, 18, 24, 0.35);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 18px 28px rgba(122, 84, 14, 0.28), 0 0 22px rgba(255, 210, 90, 0.45);
+}
+
+.nav-chip>span {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   gap: 0.1rem;
 }
 
-.nav-chip > span > span {
+.nav-chip>span>span {
   display: block;
 }
 
 /* Improve typography inside nav chips (main buttons: Radar, Evidence, etc.) */
-.nav-chip > span > span:first-child {
+.nav-chip>span>span:first-child {
   font-family: var(--font-display), sans-serif;
   font-weight: 800;
   font-size: 1.05rem;
@@ -168,7 +187,7 @@ select {
   letter-spacing: 0.06em;
 }
 
-.nav-chip > span > span:last-child {
+.nav-chip>span>span:last-child {
   font-family: var(--font-body), sans-serif;
   font-weight: 600;
   font-size: 0.85rem;
@@ -176,67 +195,22 @@ select {
   letter-spacing: 0.04em;
 }
 
-/* Tweak Radar and Evidence labels: slightly larger and nudged upward */
-.nav-chip[href="/"] > span > span:first-child,
-.nav-chip[href="/evidence"] > span > span:first-child,
-.nav-chip[href="/simulator"] > span > span:first-child {
-  font-size: 1.25rem;
-  transform: translateY(-6px);
-}
-
-/* Make 'Action' (action-plan) label larger */
-.nav-chip[href="/action-plan"] > span > span:first-child {
-  font-size: 1.4rem;
-  font-weight: 900;
-  transform: translateY(6px);
-}
-.nav-chip[href="/action-plan"] > span > span:last-child {
-  transform: translateY(3px);
-}
-
 /* Make primary nav labels consistent size for Radar, Evidence, Scenario, Action */
-.nav-chip[href="/"] > span > span:first-child,
-.nav-chip[href="/evidence"] > span > span:first-child,
-.nav-chip[href="/simulator"] > span > span:first-child,
-.nav-chip[href="/action-plan"] > span > span:first-child {
+.nav-chip[href="/"]>span>span:first-child,
+.nav-chip[href="/evidence"]>span>span:first-child,
+.nav-chip[href="/simulator"]>span>span:first-child,
+.nav-chip[href="/action-plan"]>span>span:first-child {
   font-size: 1.25rem !important;
   font-weight: 800 !important;
-  transform: translateY(0) !important;
   letter-spacing: 0.06em !important;
 }
 
-.nav-chip[href="/"] > span > span:last-child,
-.nav-chip[href="/evidence"] > span > span:last-child,
-.nav-chip[href="/simulator"] > span > span:last-child,
-.nav-chip[href="/action-plan"] > span > span:last-child {
+.nav-chip[href="/"]>span>span:last-child,
+.nav-chip[href="/evidence"]>span>span:last-child,
+.nav-chip[href="/simulator"]>span>span:last-child,
+.nav-chip[href="/action-plan"]>span>span:last-child {
   font-size: 0.9rem !important;
-  transform: translateY(0) !important;
   letter-spacing: 0.04em !important;
-}
-
-/* Nudge Radar and Evidence slightly up for visual balance */
-.nav-chip[href="/"] > span > span:first-child,
-.nav-chip[href="/evidence"] > span > span:first-child {
-  transform: translateY(-6px) !important;
-}
-.nav-chip[href="/"] > span > span:last-child,
-.nav-chip[href="/evidence"] > span > span:last-child {
-  transform: translateY(-3px) !important;
-}
-
-/* Slightly adjust the secondary line position for those chips too */
-.nav-chip[href="/"] > span > span:last-child,
-.nav-chip[href="/evidence"] > span > span:last-child,
-.nav-chip[href="/simulator"] > span > span:last-child {
-  transform: translateY(-4px);
-}
-
-/* Lower the Scenario label a bit (less upward nudge) */
-.nav-chip[href="/simulator"] > span > span:first-child {
-  transform: translateY(4px) !important;
-}
-.nav-chip[href="/simulator"] > span > span:last-child {
-  transform: translateY(2px) !important;
 }
 
 .nav-chip:hover,
@@ -417,7 +391,7 @@ select {
 .action-button:hover {
   transform: translateY(-4px);
   filter: brightness(1.04) saturate(1.03);
-  box-shadow: 0 12px 30px rgba(224,90,90,0.18);
+  box-shadow: 0 12px 30px rgba(224, 90, 90, 0.18);
 }
 
 .action-button:active {
@@ -485,14 +459,20 @@ select {
 .commodity-card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1.25rem;
-  transition: transform 180ms ease, border-color 180ms ease;
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.commodity-card h2 {
+  font-size: 1.85rem;
+  margin: 0.2rem 0;
+  font-family: var(--font-display), sans-serif;
 }
 
 .commodity-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(227, 30, 38, 0.35);
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(227, 30, 38, 0.45);
+  box-shadow: 0 20px 40px rgba(227, 30, 38, 0.12), 0 0 15px rgba(255, 205, 0, 0.1);
 }
 
 .card-header-row,
@@ -524,7 +504,7 @@ select {
 .priority-header,
 .priority-row {
   display: grid;
-  grid-template-columns: 48px 1fr 120px 90px 90px 90px;
+  grid-template-columns: 48px 3fr 1fr 1fr 1fr 1fr;
   align-items: center;
   gap: 1rem;
 }
@@ -534,7 +514,13 @@ select {
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 1.2rem;
+}
+
+.metric-grid strong {
+  display: block;
+  font-size: 1.4rem;
+  margin-top: 0.25rem;
 }
 
 .sparkline-block {
@@ -548,7 +534,8 @@ select {
 }
 
 .supporting-copy {
-  line-height: 1.55;
+  line-height: 1.6;
+  font-size: 1.15rem;
 }
 
 .status-pill,
@@ -560,7 +547,7 @@ select {
   border-radius: 999px;
   padding: 0.4rem 0.7rem;
   font-family: var(--font-mono), monospace;
-  font-size: 0.78rem;
+  font-size: 0.95rem;
 }
 
 .status-pill.tone-critical,
@@ -592,9 +579,9 @@ select {
 
 .status-pill.tone-watch,
 .tag.bearish {
-  background: linear-gradient(180deg, rgba(255,154,0,0.16), rgba(255,196,80,0.08));
+  background: linear-gradient(180deg, rgba(255, 154, 0, 0.16), rgba(255, 196, 80, 0.08));
   color: #3b1a00;
-  border: 1px solid rgba(255,140,0,0.12);
+  border: 1px solid rgba(255, 140, 0, 0.12);
 }
 
 .status-pill.tone-calm,
@@ -602,6 +589,34 @@ select {
 .tag {
   background: rgba(47, 158, 97, 0.14);
   color: #1e6a43;
+}
+
+/* Specific Action Styles for the recommendation pill */
+.status-pill.action-buy,
+.status-pill.action-wait,
+.status-pill.action-hedge,
+.status-pill.action-monitor {
+  font-size: 1.25rem;
+  padding: 0.6rem 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.status-pill.action-buy {
+  background: linear-gradient(180deg, #38b000, #2f9e61);
+  color: #ffffff;
+  border: 1px solid rgba(47, 158, 97, 0.12);
+  box-shadow: 0 4px 14px rgba(47, 158, 97, 0.35);
+}
+
+/* Any action that is not 'buy' will be big and red */
+.status-pill.action-wait,
+.status-pill.action-hedge,
+.status-pill.action-monitor {
+  background: linear-gradient(180deg, #e11d48, #b51218);
+  color: #ffffff;
+  border: 1px solid rgba(181, 18, 24, 0.12);
+  box-shadow: 0 4px 14px rgba(181, 18, 24, 0.35);
 }
 
 .two-column-layout,
@@ -697,7 +712,7 @@ select {
 .trend-chart svg .trend-line:hover {
   stroke-width: 1.8;
   stroke-opacity: 1;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
 }
 
 .legend {
@@ -893,7 +908,8 @@ select,
   border: 1px solid rgba(255, 255, 255, 0.25);
   -webkit-appearance: none;
   appearance: none;
-  padding-right: 2.6rem; /* space for chevron */
+  padding-right: 2.6rem;
+  /* space for chevron */
   background-repeat: no-repeat;
   background-position: right 12px center;
   cursor: pointer;
@@ -908,7 +924,10 @@ select optgroup {
 }
 
 /* When a select is opened some browsers still use system styles; make selected option more visible */
-select::-ms-expand { display: none; }
+select::-ms-expand {
+  display: none;
+}
+
 select:focus {
   outline: 2px solid rgba(181, 18, 24, 0.35);
 }
@@ -1037,6 +1056,7 @@ select:focus {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -1046,15 +1066,18 @@ select:focus {
   0% {
     transform: translateX(-25%);
   }
+
   50% {
     transform: translateX(130%);
   }
+
   100% {
     transform: translateX(-25%);
   }
 }
 
 @media (max-width: 1100px) {
+
   .card-grid,
   .two-column-layout,
   .detail-layout,

@@ -18,7 +18,9 @@ export function CommodityCard({ commodity }: CommodityCardProps) {
           <span className="small-label">{commodity.region}</span>
           <h2>{commodity.name}</h2>
         </div>
-        <span className={`status-pill tone-${tone}`}>{actionLabel(commodity.recommended_action)}</span>
+        <span className={`status-pill action-${commodity.recommended_action}`}>
+          {actionLabel(commodity.recommended_action)}
+        </span>
       </div>
 
       <div className="metric-grid">

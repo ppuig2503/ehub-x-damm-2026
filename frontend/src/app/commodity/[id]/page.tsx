@@ -56,7 +56,7 @@ export default async function CommodityDetailPage({ params }: CommodityDetailPag
           <Link
             key={commodity.id}
             href={`/commodity/${commodity.id}`}
-            className={commodity.id === id ? "nav-chip active" : "nav-chip"}
+            className={commodity.id === id ? "subnav-chip active" : "subnav-chip"}
           >
             {commodity.name}
           </Link>
