@@ -364,7 +364,11 @@ select {
 }
 
 .trend-line {
-  stroke-width: 2.6;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.95;
+  transition: stroke-width 140ms ease, stroke-opacity 140ms ease, filter 140ms ease;
 }
 
 .trend-line.proxy-line,
@@ -377,6 +381,12 @@ select {
 .legend-swatch.risk-line {
   stroke: var(--accent);
   background: var(--accent);
+}
+
+.trend-chart svg .trend-line:hover {
+  stroke-width: 1.8;
+  stroke-opacity: 1;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
 }
 
 .legend {
@@ -495,6 +505,33 @@ select {
   padding: 0.8rem 0.9rem;
   color: var(--text);
   background: rgba(255, 255, 255, 0.04);
+}
+
+/* Ensure native selects and their options are dark and readable */
+select,
+.field select {
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 1px solid rgba(163, 188, 214, 0.12);
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 2.6rem; /* space for chevron */
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' stroke='%23B2D9FF' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+
+select option,
+select optgroup {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* When a select is opened some browsers still use system styles; make selected option more visible */
+select::-ms-expand { display: none; }
+select:focus {
+  outline: 2px solid rgba(122,215,255,0.12);
 }
 
 .scenario-result,
