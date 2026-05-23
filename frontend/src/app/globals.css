@@ -449,13 +449,7 @@ select {
   gap: 1rem;
 }
 
-.priority-reason {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: var(--muted);
-  padding-left: 48px;
-  font-size: 0.95rem;
-}
+/* priority-reason styling defined later to keep alignment consistent */
 
 .metric-grid {
   display: grid;
