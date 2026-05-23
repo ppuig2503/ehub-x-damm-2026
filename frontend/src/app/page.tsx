@@ -33,7 +33,17 @@ export default async function HomePage() {
             <strong>{formatDate(overview.generated_at)}</strong>
           </div>
           <div className="hero-metric">
-            <span>Refresh mode</span>
+            <span className="metric-with-help">
+              <span>Refresh mode</span>
+              <details className="micro-help">
+                <summary aria-label="Refresh mode help">?</summary>
+                <div className="micro-help-card align-top">
+                  <p><strong>Live</strong> = connected Cala refresh.</p>
+                  <p><strong>Fallback</strong> = Cala was attempted, local backup is shown.</p>
+                  <p><strong>Seed</strong> = base demo dataset only.</p>
+                </div>
+              </details>
+            </span>
             <strong>{refreshLabel(overview.refresh_status)}</strong>
           </div>
         </div>
@@ -107,4 +117,3 @@ export default async function HomePage() {
     </AppShell>
   );
 }
-

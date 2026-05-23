@@ -1,5 +1,6 @@
 import {
   ActionPlanResponse,
+  CalaSearchResponse,
   CommodityDetail,
   OverviewResponse,
   RefreshResponse,
@@ -85,6 +86,29 @@ export async function refreshSignals() {
   }
 
   return response.json() as Promise<RefreshResponse>;
+}
+
+export async function searchCala(query: string) {
+  const response = await fetch(`${browserApiBaseUrl}/cala/search`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query }),
+  });
+
+  if (!response.ok) {
+    let detail = "Cala search failed.";
+    try {
+      const payload = await response.json() as { detail?: string };
+      if (payload.detail) {
+        detail = payload.detail;
+      }
+    } catch {
+      // Keep generic message when the body is not JSON.
+    }
+    throw new Error(detail);
+  }
+
+  return response.json() as Promise<CalaSearchResponse>;
 }
 
 export function evaluateScenarioServer(input: ScenarioInput) {

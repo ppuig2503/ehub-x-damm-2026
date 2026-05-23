@@ -153,3 +153,11 @@ export interface RefreshResponse {
   commodity_scope: string;
   driver_scope: string[];
 }
+
+export interface CalaSearchResponse {
+  query: string;
+  content: string;
+  explainability: string[];
+  context: string[];
+  entities: string[];
+}

@@ -32,7 +32,16 @@ export default async function ActionPlanPage() {
         <div className="panel-heading">
           <div>
             <span className="eyebrow">Priority queue</span>
-            <h3>Procurement recommendation table</h3>
+            <div className="heading-with-help">
+              <h3>Procurement recommendation table</h3>
+              <details className="micro-help">
+                <summary aria-label="Action plan terms help">?</summary>
+                <div className="micro-help-card align-left">
+                  <p><strong>Confidence</strong> = how reliable the signal looks based on source quality and supporting context.</p>
+                  <p><strong>Coverage</strong> = the share of expected buying volume SmartBuy suggests securing now.</p>
+                </div>
+              </details>
+            </div>
           </div>
         </div>
         <ActionPlanTable priorities={payload.priorities} />
@@ -66,4 +75,3 @@ export default async function ActionPlanPage() {
     </AppShell>
   );
 }
-

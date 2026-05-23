@@ -3,11 +3,13 @@ from __future__ import annotations
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from .cala_client import CalaRefreshService
+from .cala_client import CalaRefreshService, CalaSearchService
 from .data_store import load_commodities_payload, load_scenarios_payload, load_signals_payload
 from .decision_engine import SmartBuyEngine
 from .models import (
     CommodityDetail,
+    CalaSearchRequest,
+    CalaSearchResponse,
     OverviewResponse,
     RefreshRequest,
     RefreshResponse,
@@ -98,3 +100,12 @@ async def refresh_cala(payload: RefreshRequest) -> dict:
         "driver_scope": payload.drivers or [],
         "debug_error": result.get("debug_error"),
     }
+
+
+@app.post("/api/v1/cala/search", response_model=CalaSearchResponse)
+async def search_cala(payload: CalaSearchRequest) -> dict:
+    service = CalaSearchService()
+    try:
+        return await service.search(payload.query)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc

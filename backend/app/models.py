@@ -147,3 +147,15 @@ class RefreshResponse(BaseModel):
     commodity_scope: str
     driver_scope: list[str]
     debug_error: str | None = None
+
+
+class CalaSearchRequest(BaseModel):
+    query: str = Field(min_length=3)
+
+
+class CalaSearchResponse(BaseModel):
+    query: str
+    content: str
+    explainability: list[str] = Field(default_factory=list)
+    context: list[str] = Field(default_factory=list)
+    entities: list[str] = Field(default_factory=list)

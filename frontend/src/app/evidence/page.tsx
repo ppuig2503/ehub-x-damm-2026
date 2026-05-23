@@ -111,7 +111,16 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
           <div className="panel-heading">
             <div>
               <span className="eyebrow">Signal traceability</span>
-              <h3>Normalized evidence rows</h3>
+              <div className="heading-with-help">
+                <h3>Normalized evidence rows</h3>
+                <details className="micro-help">
+                  <summary aria-label="Evidence terms help">?</summary>
+                  <div className="micro-help-card align-left">
+                    <p><strong>Confidence</strong> = how reliable the signal looks based on source quality and supporting context.</p>
+                    <p><strong>Coverage</strong> = the share of expected buying volume SmartBuy suggests securing now.</p>
+                  </div>
+                </details>
+              </div>
             </div>
           </div>
           <EvidenceTable signals={payload.signals} />
