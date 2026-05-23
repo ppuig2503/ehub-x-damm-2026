@@ -213,7 +213,7 @@ select {
   border-radius: 1.6rem;
   background: linear-gradient(140deg, #b51218, #e31e26 55%, #ff6b6b);
   box-shadow: var(--shadow);
-  overflow: hidden;
+  overflow: visible;
   color: #fff7ec;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
 }
@@ -289,6 +289,12 @@ select {
   display: block;
   margin-top: 0.35rem;
   font-size: 1.5rem;
+}
+
+.metric-with-help {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .metrics-strip {
@@ -564,6 +570,12 @@ select {
   font-family: var(--font-display), sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+.heading-with-help {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .rank-list,
@@ -885,6 +897,18 @@ select:focus {
   background: rgba(255, 255, 255, 0.02);
 }
 
+.evidence-header {
+  display: grid;
+  grid-template-columns: 100px 90px 120px 1.8fr 90px 80px 90px 80px;
+  gap: 0.8rem;
+  padding: 0 1rem 0.65rem;
+  color: var(--accent);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .evidence-row summary {
   display: grid;
   grid-template-columns: 100px 90px 120px 1.8fr 90px 80px 90px 80px;
@@ -949,6 +973,68 @@ select:focus {
   margin-top: 1rem;
 }
 
+.micro-help {
+  position: relative;
+}
+
+.micro-help summary,
+.micro-help summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.micro-help summary::-webkit-details-marker {
+  display: none;
+}
+
+.micro-help summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.micro-help-card {
+  position: absolute;
+  top: 1.35rem;
+  right: 0;
+  z-index: 20;
+  width: min(18rem, 70vw);
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(255, 247, 236, 0.24);
+  border-radius: 0.9rem;
+  background: rgba(76, 10, 12, 0.92);
+  color: #fff7ec;
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.2);
+}
+
+.micro-help-card.align-left {
+  right: auto;
+  left: 0;
+}
+
+.micro-help-card.align-top {
+  top: auto;
+  bottom: 1.35rem;
+}
+
+.micro-help-card p {
+  margin: 0;
+  color: rgba(255, 247, 236, 0.9);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.micro-help-card p + p {
+  margin-top: 0.45rem;
+}
+
 .error-text {
   color: #ffb9b9;
 }
@@ -994,8 +1080,13 @@ select:focus {
   }
 
   .priority-row,
+  .evidence-header,
   .evidence-row summary {
     grid-template-columns: 1fr;
+  }
+
+  .evidence-header {
+    display: none;
   }
 }
 

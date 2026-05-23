@@ -8,6 +8,16 @@ type EvidenceTableProps = {
 export function EvidenceTable({ signals }: EvidenceTableProps) {
   return (
     <div className="evidence-table">
+      <div className="evidence-header" aria-hidden="true">
+        <span>Date</span>
+        <span>Commodity</span>
+        <span>Driver</span>
+        <span>Event</span>
+        <span>Direction</span>
+        <span>Impact</span>
+        <span>Confidence</span>
+        <span>Usage</span>
+      </div>
       {signals.map((signal) => {
         const hasDirectSourceUrl =
           (signal.source_link_status ?? "fallback") === "direct" &&
