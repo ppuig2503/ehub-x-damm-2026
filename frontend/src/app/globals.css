@@ -1,21 +1,21 @@
 :root {
-  --bg: #07111c;
-  --bg-elevated: rgba(12, 24, 38, 0.82);
-  --bg-panel: rgba(7, 17, 28, 0.76);
-  --border: rgba(163, 188, 214, 0.18);
-  --text: #eaf5ff;
-  --muted: #9eb1c5;
-  --accent: #7ad7ff;
-  --accent-strong: #24b3ff;
-  --warning: #ff9f43;
-  --critical: #ff5d5d;
-  --calm: #4dd1a0;
-  --shadow: 0 30px 60px rgba(4, 11, 20, 0.35);
+  --bg: #fff8ec;
+  --bg-elevated: rgba(255, 255, 255, 0.86);
+  --bg-panel: rgba(255, 248, 236, 0.92);
+  --border: rgba(120, 20, 20, 0.18);
+  --text: #1d0e0c;
+  --muted: #6b4d44;
+  --accent: #e31e26;
+  --accent-strong: #b51218;
+  --warning: #d9781f;
+  --critical: #b51218;
+  --calm: #2f9e61;
+  --shadow: 0 30px 60px rgba(86, 24, 22, 0.18);
 }
 
 html {
   min-height: 100%;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -23,10 +23,10 @@ body {
   min-height: 100%;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(36, 179, 255, 0.15), transparent 28%),
-    radial-gradient(circle at top right, rgba(122, 215, 255, 0.09), transparent 24%),
-    linear-gradient(160deg, #06111b 0%, #0b1b2c 52%, #08141f 100%);
-  font-family: var(--font-display), sans-serif;
+    radial-gradient(circle at top left, rgba(227, 30, 38, 0.18), transparent 32%),
+    radial-gradient(circle at 15% 85%, rgba(255, 205, 0, 0.22), transparent 40%),
+    linear-gradient(140deg, #fff4e1 0%, #fff1d5 45%, #f6e2c4 100%);
+  font-family: var(--font-body), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -69,7 +69,9 @@ select {
   margin: 0;
   font-size: clamp(2rem, 4vw, 3.5rem);
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: 0.02em;
+  font-family: var(--font-display), sans-serif;
+  text-transform: uppercase;
 }
 
 .brand-block p,
@@ -109,14 +111,14 @@ select {
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.75);
   color: var(--muted);
   transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
 .nav-chip:hover,
 .nav-chip.active {
-  border-color: rgba(122, 215, 255, 0.45);
+  border-color: rgba(227, 30, 38, 0.5);
   color: var(--text);
   transform: translateY(-1px);
 }
@@ -129,7 +131,7 @@ select {
   padding: 1.75rem;
   border: 1px solid var(--border);
   border-radius: 1.6rem;
-  background: linear-gradient(150deg, rgba(17, 33, 50, 0.9), rgba(8, 20, 31, 0.78));
+  background: linear-gradient(140deg, rgba(255, 246, 228, 0.9), rgba(255, 231, 198, 0.85));
   box-shadow: var(--shadow);
   overflow: hidden;
 }
@@ -157,7 +159,7 @@ select {
   border: 1px solid var(--border);
   border-radius: 1.4rem;
   background: var(--bg-elevated);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(10px);
 }
 
 .hero-metric,
@@ -193,8 +195,8 @@ select {
   border: none;
   border-radius: 999px;
   padding: 0.85rem 1.1rem;
-  color: #02111d;
-  background: linear-gradient(120deg, var(--accent), #b9efff);
+  color: #fff7ec;
+  background: linear-gradient(120deg, var(--accent), #ff6b6b);
   font-weight: 700;
   cursor: pointer;
 }
@@ -220,7 +222,7 @@ select {
 
 .commodity-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(122, 215, 255, 0.38);
+  border-color: rgba(227, 30, 38, 0.35);
 }
 
 .card-header-row,
@@ -285,26 +287,26 @@ select {
 .status-pill.tone-critical,
 .delta-badge.changed,
 .tag.bullish {
-  background: rgba(255, 93, 93, 0.12);
-  color: #ffb9b9;
+  background: rgba(227, 30, 38, 0.14);
+  color: #b51218;
 }
 
 .status-pill.tone-warning {
-  background: rgba(255, 159, 67, 0.12);
-  color: #ffd3a8;
+  background: rgba(217, 120, 31, 0.14);
+  color: #7c3f0f;
 }
 
 .status-pill.tone-watch,
 .tag.bearish {
-  background: rgba(122, 215, 255, 0.12);
-  color: #b4ebff;
+  background: rgba(255, 205, 0, 0.2);
+  color: #8a5a00;
 }
 
 .status-pill.tone-calm,
 .delta-badge,
 .tag {
-  background: rgba(77, 209, 160, 0.12);
-  color: #baf4df;
+  background: rgba(47, 158, 97, 0.14);
+  color: #1e6a43;
 }
 
 .two-column-layout,
@@ -333,6 +335,9 @@ select {
 .barley-box h4 {
   margin: 0;
   font-size: 1.25rem;
+  font-family: var(--font-display), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .rank-list,
@@ -373,8 +378,8 @@ select {
 
 .trend-line.proxy-line,
 .legend-swatch.proxy-line {
-  stroke: #ffc86c;
-  background: #ffc86c;
+  stroke: #ffb347;
+  background: #ffb347;
 }
 
 .trend-line.risk-line,

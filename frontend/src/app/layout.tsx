@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { Bebas_Neue, IBM_Plex_Mono, Source_Sans_3 } from "next/font/google";
 
 import "./globals.css";
 
-const displayFont = Space_Grotesk({
+const displayFont = Bebas_Neue({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["400"],
+});
+
+const bodyFont = Source_Sans_3({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["400", "600"],
 });
 
 const monoFont = IBM_Plex_Mono({
@@ -25,7 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${displayFont.variable} ${monoFont.variable}`}>
+    <html
+      lang="en"
+      className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}
+    >
       <body>{children}</body>
     </html>
   );
