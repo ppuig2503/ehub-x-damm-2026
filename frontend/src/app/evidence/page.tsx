@@ -57,15 +57,15 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
         </div>
         <div className="hero-metrics">
           <div className="hero-metric">
-            <span>Total signals</span>
+            <span className="metric-title total">Total signals</span>
             <strong>{payload.count}</strong>
           </div>
           <div className="hero-metric">
-            <span>Bullish</span>
+            <span className="metric-title bullish">Bullish</span>
             <strong>{bullishCount}</strong>
           </div>
           <div className="hero-metric">
-            <span>Bearish</span>
+            <span className="metric-title bearish">Bearish</span>
             <strong>{bearishCount}</strong>
           </div>
         </div>
