@@ -11,8 +11,8 @@ type AppShellProps = {
 const navItems = [
   { href: "/", label: "Radar" },
   { href: "/evidence", label: "Evidence" },
-  { href: "/simulator", label: "Scenario Lab" },
-  { href: "/action-plan", label: "Action Plan" },
+  { href: "/simulator", label: ["Scenario", "Lab"] },
+  { href: "/action-plan", label: ["Action", "Plan"] },
 ];
 
 export function AppShell({ children, currentPath = "/" }: AppShellProps) {
@@ -36,7 +36,14 @@ export function AppShell({ children, currentPath = "/" }: AppShellProps) {
               href={item.href}
               className={currentPath === item.href ? "nav-chip active" : "nav-chip"}
             >
-              {item.label}
+              {Array.isArray(item.label) ? (
+                <span>
+                  <span>{item.label[0]}</span>
+                  <span>{item.label[1]}</span>
+                </span>
+              ) : (
+                item.label
+              )}
             </Link>
           ))}
         </nav>
