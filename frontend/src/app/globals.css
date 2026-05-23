@@ -278,7 +278,7 @@ select {
   border-radius: 999px;
   padding: 0.85rem 1.1rem;
   color: #fff7ec;
-  background: linear-gradient(120deg, var(--accent), #ff6b6b);
+  background: linear-gradient(120deg, var(--accent-strong), #8a0d10);
   font-weight: 700;
   cursor: pointer;
 }
@@ -286,6 +286,11 @@ select {
 .action-button:disabled {
   cursor: wait;
   opacity: 0.8;
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.92);
 }
 
 .refresh-activity {
@@ -357,12 +362,20 @@ select {
 .card-header-row,
 .change-row,
 .driver-copy,
-.rank-row,
-.heatmap-row {
+.rank-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+/* Heatmap rows use a 3-column grid to keep columns aligned */
+.heatmap-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
 }
 
 .priority-header,
@@ -416,9 +429,11 @@ select {
 .status-pill.tone-critical,
 .delta-badge.changed,
 .tag.bullish {
-  background: linear-gradient(180deg, rgba(181, 18, 24, 0.18), rgba(227, 30, 38, 0.12));
-  color: #fff7ec;
-  border: 1px solid rgba(181, 18, 24, 0.18);
+  /* soft, readable chip for 'Buy' and changed badges */
+  background: linear-gradient(180deg, rgba(255, 244, 236, 0.95), rgba(255, 242, 230, 0.95));
+  color: #6b4d44;
+  border: 1px solid rgba(181, 18, 24, 0.10);
+  box-shadow: 0 2px 6px rgba(86, 24, 22, 0.06);
 }
 
 .status-pill.tone-warning {
@@ -447,6 +462,12 @@ select {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
+}
+
+/* Evidence page: make left column wider and right column narrower */
+.two-column-layout.evidence-layout {
+  grid-template-columns: 2fr 1fr;
+  align-items: start;
 }
 
 .panel {

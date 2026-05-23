@@ -106,7 +106,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
         </form>
       </section>
 
-      <div className="two-column-layout">
+      <div className="two-column-layout evidence-layout">
         <section className="panel">
           <div className="panel-heading">
             <div>
