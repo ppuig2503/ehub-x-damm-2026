@@ -87,11 +87,17 @@ select {
 .small-label {
   display: block;
   margin-bottom: 0.45rem;
-  color: var(--accent);
+  color: #fff7ec;
   font-family: var(--font-mono), monospace;
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  background: var(--accent);
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+  width: fit-content;
 }
 
 .page-frame {
@@ -131,9 +137,24 @@ select {
   padding: 1.75rem;
   border: 1px solid var(--border);
   border-radius: 1.6rem;
-  background: linear-gradient(140deg, rgba(255, 246, 228, 0.9), rgba(255, 231, 198, 0.85));
+  background: linear-gradient(140deg, #b51218, #e31e26 55%, #ff6b6b);
   box-shadow: var(--shadow);
   overflow: hidden;
+  color: #fff7ec;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+}
+
+.hero-panel p,
+.detail-hero p,
+.hero-panel span,
+.detail-hero span {
+  color: rgba(255, 247, 236, 0.9);
+}
+
+.hero-panel .hero-metric,
+.detail-hero .hero-metric {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .hero-copy {
@@ -505,38 +526,106 @@ select {
 
 .field input,
 .field select {
-  border: 1px solid rgba(163, 188, 214, 0.22);
+  border: 1px solid rgba(181, 18, 24, 0.35);
   border-radius: 0.9rem;
   padding: 0.8rem 0.9rem;
   color: var(--text);
   background: rgba(255, 255, 255, 0.04);
 }
 
+input[type="range"] {
+  width: 100%;
+  margin: 0.6rem 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b51218, #e31e26 55%, #ff6b6b);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.1rem;
+  width: 1.1rem;
+  border-radius: 50%;
+  background: #fff7ec;
+  border: 2px solid #b51218;
+  box-shadow: 0 6px 14px rgba(86, 24, 22, 0.2);
+  margin-top: -0.3rem;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b51218, #e31e26 55%, #ff6b6b);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 1.1rem;
+  width: 1.1rem;
+  border-radius: 50%;
+  background: #fff7ec;
+  border: 2px solid #b51218;
+  box-shadow: 0 6px 14px rgba(86, 24, 22, 0.2);
+}
+
+input[type="range"]::-ms-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type="range"]::-ms-fill-lower,
+input[type="range"]::-ms-fill-upper {
+  background: linear-gradient(90deg, #b51218, #e31e26 55%, #ff6b6b);
+  border-radius: 999px;
+}
+
+input[type="range"]::-ms-thumb {
+  height: 1.1rem;
+  width: 1.1rem;
+  border-radius: 50%;
+  background: #fff7ec;
+  border: 2px solid #b51218;
+  box-shadow: 0 6px 14px rgba(86, 24, 22, 0.2);
+}
+
 /* Ensure native selects and their options are dark and readable */
 select,
 .field select {
-  background: var(--bg-panel);
-  color: var(--text);
-  border: 1px solid rgba(163, 188, 214, 0.12);
+  background: linear-gradient(140deg, #b51218, #e31e26 55%, #ff6b6b);
+  background-color: #b51218;
+  color: #fff7ec;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   -webkit-appearance: none;
   appearance: none;
   padding-right: 2.6rem; /* space for chevron */
   background-repeat: no-repeat;
   background-position: right 12px center;
   cursor: pointer;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' stroke='%23B2D9FF' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' stroke='%23FFF7EC' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 select option,
 select optgroup {
-  background: var(--bg);
-  color: var(--text);
+  background: #b51218;
+  color: #fff7ec;
 }
 
 /* When a select is opened some browsers still use system styles; make selected option more visible */
 select::-ms-expand { display: none; }
 select:focus {
-  outline: 2px solid rgba(122,215,255,0.12);
+  outline: 2px solid rgba(181, 18, 24, 0.35);
 }
 
 .scenario-result,
