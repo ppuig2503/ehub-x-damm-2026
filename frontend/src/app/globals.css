@@ -11,6 +11,7 @@
   --critical: #b51218;
   --calm: #2f9e61;
   --shadow: 0 30px 60px rgba(86, 24, 22, 0.18);
+  --star-size: clamp(7.5rem, 9.5vw, 11.5rem);
 }
 
 html {
@@ -122,8 +123,8 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 9.5rem;
-  height: 9.5rem;
+  width: var(--star-size);
+  aspect-ratio: 1 / 1;
   background: linear-gradient(135deg, #f9e7a8, #f6c85a 55%, #e5a318);
   color: #5a3a00;
   text-align: center;
@@ -141,6 +142,17 @@ select {
 
 .nav-chip>span {
   transform: translateY(8px); /* Center text within the star shape visually */
+}
+
+/* Nudge Radar, Evidence and Scenario slightly up for better balance */
+.nav-chip[href="/"]>span,
+.nav-chip[href="/evidence"]>span {
+  /* Raise Radar and Evidence more */
+  transform: translateY(-8px);
+}
+.nav-chip[href="/simulator"]>span {
+  /* Keep Scenario slightly raised but less than Radar/Evidence */
+  transform: translateY(4px);
 }
 
 .subnav-chip {
@@ -644,6 +656,53 @@ select {
   box-shadow: var(--shadow);
 }
 
+/* Add subtle star filigree watermark to main cards/panels */
+.panel,
+.commodity-card,
+.hero-metric,
+.signal-counter,
+.hero-panel,
+.detail-hero {
+  position: relative;
+  overflow: visible;
+  margin: 1rem; /* add margin so filigree has breathing room */
+}
+
+.panel::before,
+.commodity-card::before,
+.hero-metric::before,
+.signal-counter::before,
+.hero-panel::before,
+.detail-hero::before {
+  content: "";
+  position: absolute;
+  /* center the filigree inside the card */
+  left: 50%;
+  top: 50%;
+  /* expand filigree to nearly fill the card (inside padding) */
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  margin: 0;
+  background: linear-gradient(135deg, rgba(249,231,168,0.26), rgba(229,162,24,0.16));
+  clip-path: polygon(50% 4%, 61% 36%, 95% 36%, 67% 56%, 78% 90%, 50% 70%, 22% 90%, 33% 56%, 5% 36%, 39% 36%);
+  opacity: 0.36;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(4deg) scale(1.02);
+  filter: blur(0.4px);
+  z-index: 0;
+}
+
+/* Ensure panel/card content renders above the filigree */
+.panel > *,
+.commodity-card > *,
+.hero-metric > *,
+.signal-counter > *,
+.hero-panel > *,
+.detail-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
 .panel-heading {
   display: flex;
   justify-content: space-between;
@@ -1121,4 +1180,10 @@ select:focus {
   .nav-chips {
     width: 100%;
   }
+}
+
+/* Evidence page: hide star filigree for all panels that appear after the red hero-panel */
+.hero-panel ~ .panel::before,
+.two-column-layout.evidence-layout .panel::before {
+  display: none !important;
 }
