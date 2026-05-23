@@ -27,7 +27,7 @@ export function RefreshSignalsButton() {
 
   const handleRefresh = async () => {
     setElapsedSeconds(0);
-    const loadingMessage = "Launching Cala queries. This can take a while while Cala resolves the request.";
+    const loadingMessage = "Launching Cala queries. Cala can take several minutes to answer; this refresh may run for up to 10 minutes.";
     setMessage(loadingMessage);
     setIsRefreshing(true);
     writeRefreshState({

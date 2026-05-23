@@ -11,7 +11,7 @@ import httpx
 from .config import DEFAULT_GENERATED_AT
 from .data_store import append_refresh_log, load_seed_signals_payload, write_runtime_signals
 
-REQUEST_TIMEOUT_SECONDS = 180.0
+REQUEST_TIMEOUT_SECONDS = 600.0
 
 
 CALA_QUERY_MAP = {
@@ -21,6 +21,30 @@ CALA_QUERY_MAP = {
             "query": "organizations.sector=aluminium.energy_costs.date>2025.return(name, date, summary, source_url, sources)",
             "region": "Europe",
             "mechanism": "Higher smelter electricity costs support aluminium procurement prices and squeeze near-term supply economics.",
+        },
+        {
+            "driver": "inventories",
+            "query": "organizations.sector=aluminium.inventories.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Inventory drawdowns tighten prompt availability while stock builds ease near-term procurement pressure.",
+        },
+        {
+            "driver": "demand",
+            "query": "organizations.sector=aluminium.demand.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "End-market demand in autos, construction, and packaging shifts aluminium procurement urgency.",
+        },
+        {
+            "driver": "imports_exports",
+            "query": "organizations.sector=aluminium.imports_exports.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Trade flows, import availability, and export controls alter regional aluminium supply pressure.",
+        },
+        {
+            "driver": "supply",
+            "query": "organizations.sector=aluminium.supply_disruptions.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Operational outages or supply disruptions reduce primary metal availability and lift procurement risk.",
         },
     ],
     "pet": [
@@ -36,6 +60,30 @@ CALA_QUERY_MAP = {
             "region": "Europe",
             "mechanism": "Packaging regulation and recycled-content targets shift the cost and availability of compliant PET grades.",
         },
+        {
+            "driver": "PTA_MEG",
+            "query": "organizations.sector=polyethylene terephthalate.pta_meg.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "PTA and MEG feedstock moves affect PET resin conversion costs and price expectations.",
+        },
+        {
+            "driver": "supply",
+            "query": "organizations.sector=polyethylene terephthalate.supply.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Plant operating rates and resin availability change prompt PET procurement conditions.",
+        },
+        {
+            "driver": "imports_exports",
+            "query": "organizations.sector=polyethylene terephthalate.imports_exports.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Imported resin offers and trade restrictions shift the cost of securing PET volumes.",
+        },
+        {
+            "driver": "demand",
+            "query": "organizations.sector=polyethylene terephthalate.demand.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Beverage and packaging demand moves influence PET tightness and buying urgency.",
+        },
     ],
     "energy": [
         {
@@ -43,6 +91,36 @@ CALA_QUERY_MAP = {
             "query": "organizations.sector=power.geopolitics.date>2025.return(name, date, summary, source_url, sources)",
             "region": "Europe",
             "mechanism": "Geopolitical shocks raise risk premia in gas and power markets relevant for industrial procurement.",
+        },
+        {
+            "driver": "weather",
+            "query": "organizations.sector=power.weather.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Europe",
+            "mechanism": "Weather-driven swings in renewables, hydro, heating, and cooling demand alter power market tightness.",
+        },
+        {
+            "driver": "inventories",
+            "query": "organizations.sector=power.inventories.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Europe",
+            "mechanism": "Gas storage and fuel inventories shape short-term resilience and procurement risk in power markets.",
+        },
+        {
+            "driver": "demand",
+            "query": "organizations.sector=power.demand.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Europe",
+            "mechanism": "Industrial and seasonal demand swings change the urgency of power procurement decisions.",
+        },
+        {
+            "driver": "supply",
+            "query": "organizations.sector=power.supply.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Europe",
+            "mechanism": "Generation outages and supply constraints tighten power availability and raise procurement pressure.",
+        },
+        {
+            "driver": "futures_prices",
+            "query": "organizations.sector=power.futures_prices.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Europe",
+            "mechanism": "Forward power and fuel prices signal how much procurement risk the market is pricing in.",
         },
     ],
     "barley": [
@@ -52,6 +130,30 @@ CALA_QUERY_MAP = {
             "region": "Europe",
             "mechanism": "Crop weather risk affects yield expectations and raises procurement uncertainty for barley.",
         },
+        {
+            "driver": "imports_exports",
+            "query": "organizations.sector=agriculture.barley.imports_exports.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Trade flows and import dependence influence barley availability and replacement costs.",
+        },
+        {
+            "driver": "supply",
+            "query": "organizations.sector=agriculture.barley.supply.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Production shortfalls or abundant harvests directly affect barley procurement pressure.",
+        },
+        {
+            "driver": "demand",
+            "query": "organizations.sector=agriculture.barley.demand.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Brewing, feed, and export demand shifts affect how tight the barley balance feels for buyers.",
+        },
+        {
+            "driver": "inventories",
+            "query": "organizations.sector=agriculture.barley.stocks.date>2025.return(name, date, summary, source_url, sources)",
+            "region": "Global",
+            "mechanism": "Stocks and carryover levels buffer or amplify barley procurement risk.",
+        },
     ],
 }
 
@@ -60,6 +162,91 @@ NAME_KEYS = ("name", "Name", "organization", "Organization", "company", "Company
 DATE_KEYS = ("date", "Date", "period", "Period")
 URL_KEYS = ("source_url", "Source URL", "url", "URL")
 REFERENCE_KEYS = ("sources", "Sources", "citations", "Citations", "references", "References")
+DIRECT_RISK_UP_TERMS = [
+    "higher costs",
+    "cost inflation",
+    "price increase",
+    "prices rose",
+    "prices rise",
+    "tight supply",
+    "tightness",
+    "shortage",
+    "volatility",
+    "disrupt",
+    "deficit",
+    "idled",
+    "halted production",
+    "outage",
+    "sanction",
+    "drought",
+    "heat stress",
+    "low stocks",
+    "drawdown",
+    "storage below",
+]
+DIRECT_RISK_DOWN_TERMS = [
+    "lower costs",
+    "cost relief",
+    "prices eased",
+    "prices fell",
+    "price decline",
+    "oversupply",
+    "ample supply",
+    "stock build",
+    "inventory build",
+    "improved availability",
+    "better availability",
+    "soft demand",
+    "weaker demand",
+    "surplus",
+    "record harvest",
+]
+DRIVER_DIRECTION_RULES = {
+    "energy": {
+        "bullish": ["higher power", "electricity costs", "energy costs", "gas prices", "tariff", "expensive electricity"],
+        "bearish": ["lower power", "cheaper electricity", "energy relief", "power costs eased"],
+    },
+    "inventories": {
+        "bullish": ["drawdown", "low inventory", "low stocks", "tight stocks", "storage below"],
+        "bearish": ["stock build", "inventory build", "ample stocks", "high inventory", "high stocks"],
+    },
+    "demand": {
+        "bullish": ["strong demand", "demand growth", "robust demand", "recovery in demand"],
+        "bearish": ["weak demand", "soft demand", "demand slowdown", "lower demand"],
+    },
+    "imports_exports": {
+        "bullish": ["export restriction", "export ban", "import dependence", "trade disruption", "tariff increase"],
+        "bearish": ["higher imports", "import availability", "more imports", "trade flows improved"],
+    },
+    "supply": {
+        "bullish": ["outage", "shutdown", "disruption", "maintenance", "reduced output", "lower production"],
+        "bearish": ["restart", "capacity increase", "production recovery", "higher output", "supply improved"],
+    },
+    "oil": {
+        "bullish": ["higher crude", "oil volatility", "feedstock costs", "sanction", "supply risk"],
+        "bearish": ["lower crude", "oil prices eased", "feedstock relief", "refining margin pressure down"],
+    },
+    "PTA_MEG": {
+        "bullish": ["pta rose", "meg rose", "feedstock increase", "spread widened", "cost push"],
+        "bearish": ["pta fell", "meg fell", "spread narrowed", "feedstock eased"],
+    },
+    "regulation": {
+        "bullish": ["tax", "mandatory", "compliance cost", "recycled content target", "producer responsibility fee"],
+        "bearish": ["relief", "delay", "exemption", "support subsidy", "lower compliance burden"],
+    },
+    "geopolitics": {
+        "bullish": ["crisis", "conflict", "sanction", "blockade", "war risk", "closure"],
+        "bearish": ["ceasefire", "stabilized", "risk eased", "flows restored", "de-escalation"],
+    },
+    "weather": {
+        "bullish": ["drought", "heat stress", "frost", "flooding", "yield risk", "crop stress"],
+        "bearish": ["favorable weather", "good rainfall", "yield improvement", "benign conditions"],
+    },
+    "futures_prices": {
+        "bullish": ["futures rose", "forward curve higher", "backwardation", "premium widened"],
+        "bearish": ["futures fell", "forward curve eased", "contango", "premium narrowed"],
+    },
+}
 
 
 def _pick_value(row: dict[str, Any], candidates: tuple[str, ...], default: str = "") -> str:
@@ -114,43 +301,16 @@ def _normalize_date(date_text: str) -> str:
 
 def _infer_direction(driver: str, summary: str) -> str:
     lowered = summary.lower()
-    bearish_terms = [
-        "lower costs",
-        "cost relief",
-        "costs eased",
-        "prices eased",
-        "oversupply",
-        "ample supply",
-        "improved availability",
-        "weaker demand",
-        "soft demand",
-    ]
-    bullish_terms = [
-        "higher costs",
-        "higher",
-        "rise",
-        "increase",
-        "tight",
-        "volatility",
-        "disrupt",
-        "shortage",
-        "support pricing",
-        "pressure",
-        "drought",
-        "sanction",
-        "deficit",
-        "idled",
-        "halted production",
-        "elevated",
-        "crisis",
-        "tax",
-        "mandatory",
-    ]
+    rules = DRIVER_DIRECTION_RULES.get(driver, {})
+    bullish_terms = rules.get("bullish", [])
+    bearish_terms = rules.get("bearish", [])
     if any(term in lowered for term in bearish_terms):
         return "bearish"
     if any(term in lowered for term in bullish_terms):
         return "bullish"
-    if driver in {"energy", "inventories", "supply", "weather", "geopolitics", "futures_prices", "PTA_MEG", "oil", "regulation"}:
+    if any(term in lowered for term in DIRECT_RISK_DOWN_TERMS):
+        return "bearish"
+    if any(term in lowered for term in DIRECT_RISK_UP_TERMS):
         return "bullish"
     return "neutral"
 
