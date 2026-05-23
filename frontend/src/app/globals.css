@@ -323,8 +323,8 @@ select {
   border: none;
   border-radius: 999px;
   padding: 0.85rem 1.1rem;
-  color: #fff7ec;
-  background: linear-gradient(120deg, var(--accent-strong), #8a0d10);
+  color: #ffffff;
+  background: linear-gradient(120deg, #ff8a8a 6%, #e05a5a 60%);
   font-weight: 700;
   cursor: pointer;
 }
@@ -335,8 +335,18 @@ select {
 }
 
 .action-button:hover {
+  transform: translateY(-4px);
+  filter: brightness(1.04) saturate(1.03);
+  box-shadow: 0 12px 30px rgba(224,90,90,0.18);
+}
+
+.action-button:active {
+  transform: translateY(-2px) scale(0.995);
+}
+
+.action-button:hover {
   transform: translateY(-1px);
-  filter: brightness(0.92);
+  filter: brightness(0.96);
 }
 
 .refresh-activity {
@@ -407,11 +417,18 @@ select {
 
 .card-header-row,
 .change-row,
-.driver-copy,
-.rank-row {
+.driver-copy {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Rank rows use a 3-column grid: number | content | score */
+.rank-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 64px;
+  align-items: start;
   gap: 1rem;
 }
 
@@ -526,6 +543,11 @@ select {
 .two-column-layout.evidence-layout {
   grid-template-columns: 2fr 1fr;
   align-items: start;
+}
+
+/* Scenario layout: add space above primary action button */
+.scenario-layout .action-button {
+  margin-top: 1.6rem;
 }
 
 .panel {
