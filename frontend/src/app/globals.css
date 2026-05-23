@@ -227,13 +227,27 @@ select {
 .change-row,
 .driver-copy,
 .rank-row,
-.priority-header,
-.priority-row,
 .heatmap-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.priority-header,
+.priority-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 120px 90px 90px 90px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.priority-reason {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  padding-left: 48px;
+  font-size: 0.95rem;
 }
 
 .metric-grid {
@@ -543,6 +557,10 @@ select {
 }
 
 .priority-header {
+  display: grid;
+  grid-template-columns: 60px 1.5fr 120px 110px 110px 110px;
+  align-items: center;
+  gap: 1rem;
   color: var(--accent);
   font-family: var(--font-mono), monospace;
   text-transform: uppercase;
