@@ -188,12 +188,12 @@ select {
 
 .hero-panel .metric-title.bullish,
 .detail-hero .metric-title.bullish {
-  color: #ffcd00;
+  color: var(--calm);
 }
 
 .hero-panel .metric-title.bearish,
 .detail-hero .metric-title.bearish {
-  color: #ffe2b3;
+  color: var(--critical);
 }
 
 .hero-panel .metric-title.total,
@@ -427,13 +427,25 @@ select {
 }
 
 .status-pill.tone-critical,
-.delta-badge.changed,
-.tag.bullish {
-  /* soft, readable chip for 'Buy' and changed badges */
+.delta-badge.changed {
+  /* soft, readable chip for critical/delta */
   background: linear-gradient(180deg, rgba(255, 244, 236, 0.95), rgba(255, 242, 230, 0.95));
   color: #6b4d44;
   border: 1px solid rgba(181, 18, 24, 0.10);
   box-shadow: 0 2px 6px rgba(86, 24, 22, 0.06);
+}
+
+/* vivid tags for bullish / bearish */
+.tag.bullish {
+  background: linear-gradient(180deg, #38b000, #2f9e61);
+  color: #ffffff;
+  border: 1px solid rgba(47, 158, 97, 0.12);
+}
+
+.tag.bearish {
+  background: linear-gradient(180deg, #e11d48, #b51218);
+  color: #ffffff;
+  border: 1px solid rgba(181, 18, 24, 0.12);
 }
 
 .status-pill.tone-warning {
@@ -606,11 +618,11 @@ select {
 }
 
 .bar-fill.bullish {
-  background: linear-gradient(90deg, #b51218, #e31e26);
+  background: linear-gradient(90deg, #38b000, #2f9e61);
 }
 
 .bar-fill.bearish {
-  background: linear-gradient(90deg, #ff9a00, #ffd36b);
+  background: linear-gradient(90deg, #e11d48, #b51218);
 }
 
 .bar-fill.neutral {
@@ -829,11 +841,11 @@ select:focus {
 }
 
 .dir-bullish {
-  color: #ffd1c7;
+  color: #2f9e61;
 }
 
 .dir-bearish {
-  color: #fff1c8;
+  color: #b51218;
 }
 
 .heatmap-row,
