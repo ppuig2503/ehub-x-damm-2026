@@ -159,6 +159,86 @@ select {
   display: block;
 }
 
+/* Improve typography inside nav chips (main buttons: Radar, Evidence, etc.) */
+.nav-chip > span > span:first-child {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+.nav-chip > span > span:last-child {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  opacity: 0.95;
+  letter-spacing: 0.04em;
+}
+
+/* Tweak Radar and Evidence labels: slightly larger and nudged upward */
+.nav-chip[href="/"] > span > span:first-child,
+.nav-chip[href="/evidence"] > span > span:first-child,
+.nav-chip[href="/simulator"] > span > span:first-child {
+  font-size: 1.25rem;
+  transform: translateY(-6px);
+}
+
+/* Make 'Action' (action-plan) label larger */
+.nav-chip[href="/action-plan"] > span > span:first-child {
+  font-size: 1.4rem;
+  font-weight: 900;
+  transform: translateY(6px);
+}
+.nav-chip[href="/action-plan"] > span > span:last-child {
+  transform: translateY(3px);
+}
+
+/* Make primary nav labels consistent size for Radar, Evidence, Scenario, Action */
+.nav-chip[href="/"] > span > span:first-child,
+.nav-chip[href="/evidence"] > span > span:first-child,
+.nav-chip[href="/simulator"] > span > span:first-child,
+.nav-chip[href="/action-plan"] > span > span:first-child {
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  transform: translateY(0) !important;
+  letter-spacing: 0.06em !important;
+}
+
+.nav-chip[href="/"] > span > span:last-child,
+.nav-chip[href="/evidence"] > span > span:last-child,
+.nav-chip[href="/simulator"] > span > span:last-child,
+.nav-chip[href="/action-plan"] > span > span:last-child {
+  font-size: 0.9rem !important;
+  transform: translateY(0) !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Nudge Radar and Evidence slightly up for visual balance */
+.nav-chip[href="/"] > span > span:first-child,
+.nav-chip[href="/evidence"] > span > span:first-child {
+  transform: translateY(-6px) !important;
+}
+.nav-chip[href="/"] > span > span:last-child,
+.nav-chip[href="/evidence"] > span > span:last-child {
+  transform: translateY(-3px) !important;
+}
+
+/* Slightly adjust the secondary line position for those chips too */
+.nav-chip[href="/"] > span > span:last-child,
+.nav-chip[href="/evidence"] > span > span:last-child,
+.nav-chip[href="/simulator"] > span > span:last-child {
+  transform: translateY(-4px);
+}
+
+/* Lower the Scenario label a bit (less upward nudge) */
+.nav-chip[href="/simulator"] > span > span:first-child {
+  transform: translateY(4px) !important;
+}
+.nav-chip[href="/simulator"] > span > span:last-child {
+  transform: translateY(2px) !important;
+}
+
 .nav-chip:hover,
 .nav-chip.active {
   border-color: rgba(181, 18, 24, 0.35);

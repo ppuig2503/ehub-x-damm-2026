@@ -30,22 +30,23 @@ export function AppShell({ children, currentPath = "/" }: AppShellProps) {
           </div>
         </div>
         <nav className="nav-chips" aria-label="Primary">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={currentPath === item.href ? "nav-chip active" : "nav-chip"}
-            >
-              {Array.isArray(item.label) ? (
+          {navItems.map((item) => {
+            const primary = Array.isArray(item.label) ? item.label[0] : item.label;
+            const secondary = Array.isArray(item.label) ? item.label[1] : "";
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={currentPath === item.href ? "nav-chip active" : "nav-chip"}
+              >
                 <span>
-                  <span>{item.label[0]}</span>
-                  <span>{item.label[1]}</span>
+                  <span>{primary}</span>
+                  <span>{secondary}</span>
                 </span>
-              ) : (
-                item.label
-              )}
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </nav>
       </header>
       <GlobalRefreshStatus />
