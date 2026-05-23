@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 ROOT_DIR = Path(__file__).resolve().parents[2]
+load_dotenv(ROOT_DIR / ".env")
+
 DATA_DIR = ROOT_DIR / "data"
 SEEDS_DIR = DATA_DIR / "seeds"
 RAW_DIR = DATA_DIR / "raw"
@@ -85,4 +89,3 @@ COMMODITY_NAMES = {
     "energy": "Energy",
     "barley": "Barley",
 }
-

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 
+import { GlobalRefreshStatus } from "@/components/GlobalRefreshStatus";
+
 type AppShellProps = {
   children: ReactNode;
   currentPath?: string;
@@ -39,8 +41,8 @@ export function AppShell({ children, currentPath = "/" }: AppShellProps) {
           ))}
         </nav>
       </header>
+      <GlobalRefreshStatus />
       <main className="page-frame">{children}</main>
     </div>
   );
 }
-

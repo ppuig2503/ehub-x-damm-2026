@@ -14,6 +14,8 @@ export interface Signal {
   horizon: string;
   source_name: string;
   source_url: string;
+  source_reference?: string | null;
+  source_link_status?: "direct" | "fallback";
   evidence: string;
   mechanism: string;
   used_in_score: boolean;
@@ -151,4 +153,3 @@ export interface RefreshResponse {
   commodity_scope: string;
   driver_scope: string[];
 }
-

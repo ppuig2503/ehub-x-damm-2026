@@ -25,6 +25,8 @@ class Signal(BaseModel):
     horizon: str
     source_name: str
     source_url: str
+    source_reference: str | None = None
+    source_link_status: Literal["direct", "fallback"]
     evidence: str
     mechanism: str
     used_in_score: bool
@@ -144,4 +146,4 @@ class RefreshResponse(BaseModel):
     signals_available: int
     commodity_scope: str
     driver_scope: list[str]
-
+    debug_error: str | None = None
