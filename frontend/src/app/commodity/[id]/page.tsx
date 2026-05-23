@@ -1,0 +1,128 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { AppShell } from "@/components/AppShell";
+import { DriverBreakdown } from "@/components/DriverBreakdown";
+import { EvidenceTable } from "@/components/EvidenceTable";
+import { ForcesPanel } from "@/components/ForcesPanel";
+import { TrendChart } from "@/components/TrendChart";
+import { actionLabel, formatPercent, titleize } from "@/lib/format";
+import { getCommodityDetail, getOverview } from "@/lib/api";
+
+export const dynamic = "force-dynamic";
+
+type CommodityDetailPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function CommodityDetailPage({ params }: CommodityDetailPageProps) {
+  const { id } = await params;
+  const detail = await getCommodityDetail(id).catch(() => null);
+  if (!detail) {
+    notFound();
+  }
+  const overview = await getOverview();
+
+  return (
+    <AppShell currentPath="/">
+      <section className="detail-hero">
+        <div>
+          <span className="eyebrow">{detail.region}</span>
+          <h2>{detail.name}</h2>
+          <p>{detail.recommendation.explanation}</p>
+        </div>
+        <div className="hero-metrics">
+          <div className="hero-metric">
+            <span>Recommendation</span>
+            <strong>{actionLabel(detail.recommendation.recommended_action)}</strong>
+          </div>
+          <div className="hero-metric">
+            <span>Coverage</span>
+            <strong>{detail.recommendation.suggested_coverage}</strong>
+          </div>
+          <div className="hero-metric">
+            <span>Horizon</span>
+            <strong>{detail.recommendation.suggested_horizon}</strong>
+          </div>
+          <div className="hero-metric">
+            <span>Confidence</span>
+            <strong>{formatPercent(detail.confidence)}</strong>
+          </div>
+        </div>
+      </section>
+
+      <nav className="subnav" aria-label="Commodity switcher">
+        {overview.commodities.map((commodity) => (
+          <Link
+            key={commodity.id}
+            href={`/commodity/${commodity.id}`}
+            className={commodity.id === id ? "nav-chip active" : "nav-chip"}
+          >
+            {commodity.name}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="detail-layout">
+        <TrendChart points={detail.trend} proxyLabel={detail.proxy_label} />
+        <section className="panel">
+          <div className="panel-heading">
+            <div>
+              <span className="eyebrow">Explanation card</span>
+              <h3>Why SmartBuy recommends this move</h3>
+            </div>
+          </div>
+          <p>{detail.recommendation.explanation}</p>
+          <div className="detail-kpis">
+            <div>
+              <span className="metric-label">Latest proxy</span>
+              <strong>{detail.latest_proxy_value}</strong>
+              <small>{detail.proxy_value_label}</small>
+            </div>
+            <div>
+              <span className="metric-label">Risk score</span>
+              <strong>{Math.round(detail.risk_score)}</strong>
+              <small>0-100</small>
+            </div>
+            <div>
+              <span className="metric-label">Uncertainty</span>
+              <strong>{Math.round(detail.uncertainty_score)}</strong>
+              <small>0-100</small>
+            </div>
+          </div>
+          <p className="small-muted">{detail.what_changed}</p>
+          {detail.barley_features ? (
+            <div className="barley-box">
+              <h4>Barley dataset layer</h4>
+              <p>
+                `y` is treated as a market indicator proxy. Latest 12-week momentum:{" "}
+                <strong>{detail.barley_features.barley_momentum_12w}%</strong>. Recent trend:{" "}
+                <strong>{titleize(String(detail.barley_features.barley_recent_trend))}</strong>.
+              </p>
+            </div>
+          ) : null}
+        </section>
+      </div>
+
+      <div className="detail-layout">
+        <DriverBreakdown contributions={detail.driver_contributions} />
+        <ForcesPanel bullish={detail.top_bullish_drivers} bearish={detail.top_bearish_drivers} />
+      </div>
+
+      <section className="panel">
+        <div className="panel-heading">
+          <div>
+            <span className="eyebrow">Evidence</span>
+            <h3>Signals behind the recommendation</h3>
+          </div>
+        </div>
+        <EvidenceTable signals={detail.signals.slice(0, 5)} />
+        <div className="inline-actions">
+          <Link href="/evidence" className="text-link">
+            Open full Evidence Board
+          </Link>
+        </div>
+      </section>
+    </AppShell>
+  );
+}

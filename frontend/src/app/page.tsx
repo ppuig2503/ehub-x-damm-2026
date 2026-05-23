@@ -1,0 +1,110 @@
+import Link from "next/link";
+
+import { AppShell } from "@/components/AppShell";
+import { CommodityCard } from "@/components/CommodityCard";
+import { RefreshSignalsButton } from "@/components/RefreshSignalsButton";
+import { formatDate, refreshLabel } from "@/lib/format";
+import { getOverview } from "@/lib/api";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const overview = await getOverview();
+  const topRisks = overview.commodities.slice(0, 2);
+
+  return (
+    <AppShell currentPath="/">
+      <section className="hero-panel">
+        <div className="hero-copy">
+          <span className="eyebrow">Procurement Radar</span>
+          <h2>Today&apos;s highest buying pressure sits in {topRisks.map((item) => item.name).join(" and ")}.</h2>
+          <p>
+            SmartBuy normalizes external signals, blends them with proxy data, and
+            keeps the barley dataset in the decision loop without pretending it is an exact price series.
+          </p>
+        </div>
+        <div className="hero-metrics">
+          <div className="hero-metric">
+            <span>Market status</span>
+            <strong>{overview.market_status}</strong>
+          </div>
+          <div className="hero-metric">
+            <span>Latest update</span>
+            <strong>{formatDate(overview.generated_at)}</strong>
+          </div>
+          <div className="hero-metric">
+            <span>Refresh mode</span>
+            <strong>{refreshLabel(overview.refresh_status)}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section className="metrics-strip">
+        <div className="signal-counter">
+          <span>24h</span>
+          <strong>{overview.new_signals["24h"]}</strong>
+        </div>
+        <div className="signal-counter">
+          <span>48h</span>
+          <strong>{overview.new_signals["48h"]}</strong>
+        </div>
+        <div className="signal-counter">
+          <span>72h</span>
+          <strong>{overview.new_signals["72h"]}</strong>
+        </div>
+        <div className="signal-counter wide">
+          <span>View mode</span>
+          <strong>Risk view / 1-3 months</strong>
+        </div>
+        <RefreshSignalsButton />
+      </section>
+
+      <section className="card-grid">
+        {overview.commodities.map((commodity) => (
+          <CommodityCard key={commodity.id} commodity={commodity} />
+        ))}
+      </section>
+
+      <section className="two-column-layout">
+        <article className="panel">
+          <div className="panel-heading">
+            <div>
+              <span className="eyebrow">Top risks today</span>
+              <h3>Priority for the purchasing meeting</h3>
+            </div>
+          </div>
+          <div className="rank-list">
+            {overview.commodities.map((commodity, index) => (
+              <div key={commodity.id} className="rank-row">
+                <strong>{index + 1}</strong>
+                <div>
+                  <Link href={`/commodity/${commodity.id}`}>{commodity.name}</Link>
+                  <p className="small-muted">{commodity.change_note}</p>
+                </div>
+                <span>{Math.round(commodity.risk_score)}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="panel">
+          <div className="panel-heading">
+            <div>
+              <span className="eyebrow">What changed</span>
+              <h3>Recommendation movement since last update</h3>
+            </div>
+          </div>
+          <div className="change-list">
+            {overview.commodities.map((commodity) => (
+              <div key={commodity.id} className="change-item">
+                <h4>{commodity.name}</h4>
+                <p>{commodity.change_note}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
+    </AppShell>
+  );
+}
+

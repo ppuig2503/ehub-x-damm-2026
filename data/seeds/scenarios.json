@@ -1,0 +1,134 @@
+{
+  "generated_at": "2026-05-23T09:30:00+02:00",
+  "variables": [
+    {
+      "id": "energy_cost_shock",
+      "label": "Energy cost shock (%)",
+      "type": "range",
+      "min": -20,
+      "max": 30,
+      "step": 5,
+      "default": 0,
+      "applies_to": [
+        "aluminium",
+        "pet",
+        "energy",
+        "barley"
+      ]
+    },
+    {
+      "id": "oil_shock",
+      "label": "Oil shock (%)",
+      "type": "range",
+      "min": -20,
+      "max": 30,
+      "step": 5,
+      "default": 0,
+      "applies_to": [
+        "pet",
+        "energy"
+      ]
+    },
+    {
+      "id": "supply_disruption",
+      "label": "Supply disruption",
+      "type": "select",
+      "default": "none",
+      "options": [
+        "none",
+        "mild",
+        "severe"
+      ],
+      "applies_to": [
+        "aluminium",
+        "pet",
+        "energy",
+        "barley"
+      ]
+    },
+    {
+      "id": "demand_outlook",
+      "label": "Demand outlook",
+      "type": "select",
+      "default": "neutral",
+      "options": [
+        "weak",
+        "neutral",
+        "strong"
+      ],
+      "applies_to": [
+        "aluminium",
+        "pet",
+        "energy",
+        "barley"
+      ]
+    },
+    {
+      "id": "inventory_level",
+      "label": "Inventory level",
+      "type": "select",
+      "default": "normal",
+      "options": [
+        "low",
+        "normal",
+        "high"
+      ],
+      "applies_to": [
+        "aluminium",
+        "pet",
+        "energy",
+        "barley"
+      ]
+    },
+    {
+      "id": "geopolitical_risk",
+      "label": "Geopolitical risk",
+      "type": "select",
+      "default": "medium",
+      "options": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "applies_to": [
+        "aluminium",
+        "pet",
+        "energy",
+        "barley"
+      ]
+    },
+    {
+      "id": "weather_risk",
+      "label": "Weather risk",
+      "type": "select",
+      "default": "medium",
+      "options": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "applies_to": [
+        "energy",
+        "barley"
+      ]
+    },
+    {
+      "id": "coverage_secured",
+      "label": "Coverage already secured (%)",
+      "type": "select",
+      "default": "0",
+      "options": [
+        "0",
+        "25",
+        "50",
+        "75"
+      ],
+      "applies_to": [
+        "aluminium",
+        "pet",
+        "energy",
+        "barley"
+      ]
+    }
+  ]
+}
