@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-import { evaluateScenario } from "@/lib/api";
+import { evaluateScenario, searchCala } from "@/lib/api";
 import { actionLabel, titleize } from "@/lib/format";
 import {
+  CalaSearchResponse,
   CommodityOverview,
   ScenarioCatalog,
   ScenarioInput,
@@ -43,6 +46,10 @@ export function ScenarioLab({ overview, catalog, initialResult }: ScenarioLabPro
   const [result, setResult] = useState<ScenarioResult | null>(initialResult);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState("How did the aluminium price evolve in the different past geopolitical events?");
+  const [searchResult, setSearchResult] = useState<CalaSearchResponse | null>(null);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   const requestScenario = (nextState: ScenarioInput) => {
     startTransition(() => {
@@ -77,116 +84,211 @@ export function ScenarioLab({ overview, catalog, initialResult }: ScenarioLabPro
     requestScenario({ ...formState, commodity: selectedCommodity });
   };
 
+  const submitSearch = async () => {
+    const trimmedQuery = searchQuery.trim();
+    if (!trimmedQuery) {
+      setSearchError("Enter a question for Cala.");
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchError(null);
+    try {
+      const response = await searchCala(trimmedQuery);
+      setSearchResult(response);
+    } catch (issue) {
+      setSearchError(issue instanceof Error ? issue.message : "Cala search failed.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   return (
-    <div className="scenario-layout">
-      <section className="panel">
-        <div className="panel-heading">
-          <div>
-            <span className="eyebrow">Scenario setup</span>
-            <h3>Stress the recommendation</h3>
+    <>
+      <div className="scenario-layout">
+        <section className="panel">
+          <div className="panel-heading">
+            <div>
+              <span className="eyebrow">Scenario setup</span>
+              <h3>Stress the recommendation</h3>
+            </div>
           </div>
-        </div>
-        <div className="field-grid">
-          <label className="field">
-            <span>Commodity</span>
-            <select
-              value={selectedCommodity}
-              onChange={(event) => handleCommodityChange(event.target.value)}
-            >
-              {overview.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="field-grid">
+            <label className="field">
+              <span>Commodity</span>
+              <select
+                value={selectedCommodity}
+                onChange={(event) => handleCommodityChange(event.target.value)}
+              >
+                {overview.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-          {catalog.variables.map((variable) => {
-            if (!variable.applies_to.includes(selectedCommodity)) {
-              return null;
-            }
+            {catalog.variables.map((variable) => {
+              if (!variable.applies_to.includes(selectedCommodity)) {
+                return null;
+              }
 
-            if (variable.type === "range") {
+              if (variable.type === "range") {
+                return (
+                  <label key={variable.id} className="field">
+                    <span>{variable.label}</span>
+                    <input
+                      type="range"
+                      min={variable.min ?? 0}
+                      max={variable.max ?? 100}
+                      step={variable.step ?? 1}
+                      value={String(formState[variable.id as keyof ScenarioInput])}
+                      onChange={(event) => updateField(variable.id as keyof ScenarioInput, event.target.value)}
+                    />
+                    <strong>{formState[variable.id as keyof ScenarioInput]}</strong>
+                  </label>
+                );
+              }
+
               return (
                 <label key={variable.id} className="field">
                   <span>{variable.label}</span>
-                  <input
-                    type="range"
-                    min={variable.min ?? 0}
-                    max={variable.max ?? 100}
-                    step={variable.step ?? 1}
+                  <select
                     value={String(formState[variable.id as keyof ScenarioInput])}
                     onChange={(event) => updateField(variable.id as keyof ScenarioInput, event.target.value)}
-                  />
-                  <strong>{formState[variable.id as keyof ScenarioInput]}</strong>
+                  >
+                    {(variable.options || []).map((option) => (
+                      <option key={option} value={option}>
+                        {titleize(option)}
+                      </option>
+                    ))}
+                  </select>
                 </label>
               );
-            }
+            })}
+          </div>
+          <button type="button" className="action-button" onClick={submit} disabled={isPending}>
+            {isPending ? "Recalculating..." : "Generate buying plan"}
+          </button>
+        </section>
 
-            return (
-              <label key={variable.id} className="field">
-                <span>{variable.label}</span>
-                <select
-                  value={String(formState[variable.id as keyof ScenarioInput])}
-                  onChange={(event) => updateField(variable.id as keyof ScenarioInput, event.target.value)}
-                >
-                  {(variable.options || []).map((option) => (
-                    <option key={option} value={option}>
-                      {titleize(option)}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            );
-          })}
-        </div>
-        <button type="button" className="action-button" onClick={submit} disabled={isPending}>
-          {isPending ? "Recalculating..." : "Generate buying plan"}
-        </button>
-      </section>
+        <section className="panel">
+          <div className="panel-heading">
+            <div>
+              <span className="eyebrow">Result</span>
+              <h3>Before vs after</h3>
+            </div>
+          </div>
+          {result ? (
+            <div className="scenario-result">
+              <div className="scenario-score-grid">
+                <div className="hero-metric">
+                  <span>Base risk</span>
+                  <strong>{Math.round(result.base_risk_score)}</strong>
+                </div>
+                <div className="hero-metric">
+                  <span>New risk</span>
+                  <strong>{Math.round(result.new_risk_score)}</strong>
+                </div>
+                <div className="hero-metric">
+                  <span>Delta</span>
+                  <strong>{result.delta > 0 ? "+" : ""}{result.delta.toFixed(1)}</strong>
+                </div>
+              </div>
+              <p className="scenario-callout">
+                {actionLabel(result.recommendation.recommended_action)} | {result.recommendation.suggested_coverage} |{" "}
+                {result.recommendation.suggested_horizon}
+              </p>
+              <p>{result.narrative}</p>
+              <div className="driver-list compact">
+                {result.driver_impacts.map((item) => (
+                  <div key={item.driver} className="driver-row compact">
+                    <span>{titleize(item.driver)}</span>
+                    <strong>{item.contribution > 0 ? "+" : ""}{item.contribution.toFixed(1)}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="small-muted">Evaluating the base scenario...</p>
+          )}
+          {error ? <p className="error-text">{error}</p> : null}
+        </section>
+      </div>
 
-      <section className="panel">
+      <section className="panel scenario-search-panel">
         <div className="panel-heading">
           <div>
-            <span className="eyebrow">Result</span>
-            <h3>Before vs after</h3>
+            <span className="eyebrow">Cala Search</span>
+            <h3>Ask Cala in natural language</h3>
           </div>
         </div>
-        {result ? (
-          <div className="scenario-result">
-            <div className="scenario-score-grid">
-              <div className="hero-metric">
-                <span>Base risk</span>
-                <strong>{Math.round(result.base_risk_score)}</strong>
-              </div>
-              <div className="hero-metric">
-                <span>New risk</span>
-                <strong>{Math.round(result.new_risk_score)}</strong>
-              </div>
-              <div className="hero-metric">
-                <span>Delta</span>
-                <strong>{result.delta > 0 ? "+" : ""}{result.delta.toFixed(1)}</strong>
-              </div>
-            </div>
-            <p className="scenario-callout">
-              {actionLabel(result.recommendation.recommended_action)} | {result.recommendation.suggested_coverage} |{" "}
-              {result.recommendation.suggested_horizon}
+        <div className="scenario-search-layout">
+          <label className="field scenario-search-field">
+            <span>Question</span>
+            <textarea
+              className="scenario-search-input"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="How did the aluminium price evolve during past geopolitical events?"
+              rows={4}
+            />
+          </label>
+          <div className="scenario-search-actions">
+            <button type="button" className="action-button" onClick={() => void submitSearch()} disabled={isSearching}>
+              {isSearching ? "Asking Cala..." : "Ask Cala"}
+            </button>
+            <p className="small-muted">
+              Use broader market questions here. Cala answers in natural language and may take a few minutes.
             </p>
-            <p>{result.narrative}</p>
-            <div className="driver-list compact">
-              {result.driver_impacts.map((item) => (
-                <div key={item.driver} className="driver-row compact">
-                  <span>{titleize(item.driver)}</span>
-                  <strong>{item.contribution > 0 ? "+" : ""}{item.contribution.toFixed(1)}</strong>
-                </div>
-              ))}
+          </div>
+        </div>
+        {searchError ? <p className="error-text">{searchError}</p> : null}
+        {searchResult ? (
+          <div className="scenario-search-result">
+            <p className="scenario-search-question">
+              <strong>Query:</strong> {searchResult.query}
+            </p>
+            <div className="scenario-search-answer">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {searchResult.content}
+              </ReactMarkdown>
             </div>
+            {searchResult.entities.length ? (
+              <div className="scenario-search-meta">
+                <strong>Entities</strong>
+                <div className="tag-list">
+                  {searchResult.entities.map((item) => (
+                    <span key={item} className="tag">{item}</span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {searchResult.context.length ? (
+              <div className="scenario-search-meta">
+                <strong>Context</strong>
+                <ul className="trigger-list">
+                  {searchResult.context.map((item, index) => (
+                    <li key={`context-${index}`}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+            {searchResult.explainability.length ? (
+              <div className="scenario-search-meta">
+                <strong>Explainability</strong>
+                <ul className="trigger-list">
+                  {searchResult.explainability.map((item, index) => (
+                    <li key={`explainability-${index}`}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
         ) : (
-          <p className="small-muted">Evaluating the base scenario...</p>
+          <p className="small-muted">Ask a market question and Cala will answer in natural language here.</p>
         )}
-        {error ? <p className="error-text">{error}</p> : null}
       </section>
-    </div>
+    </>
   );
 }

@@ -299,6 +299,45 @@ def _normalize_date(date_text: str) -> str:
     return datetime.now().date().isoformat()
 
 
+def _normalize_text_list(value: Any) -> list[str]:
+    if not value:
+        return []
+    if isinstance(value, list):
+        normalized: list[str] = []
+        for item in value:
+            if isinstance(item, str) and item.strip():
+                normalized.append(item.strip())
+            elif isinstance(item, dict):
+                text_value = (
+                    item.get("content")
+                    or item.get("summary")
+                    or item.get("text")
+                    or item.get("name")
+                )
+                if text_value:
+                    normalized.append(str(text_value).strip())
+        return normalized
+    if isinstance(value, str) and value.strip():
+        return [value.strip()]
+    return []
+
+
+def _normalize_entity_list(value: Any) -> list[str]:
+    if not value:
+        return []
+    if isinstance(value, list):
+        normalized: list[str] = []
+        for item in value:
+            if isinstance(item, str) and item.strip():
+                normalized.append(item.strip())
+            elif isinstance(item, dict):
+                name = item.get("name") or item.get("title") or item.get("id")
+                if name:
+                    normalized.append(str(name).strip())
+        return normalized
+    return []
+
+
 def _infer_direction(driver: str, summary: str) -> str:
     lowered = summary.lower()
     rules = DRIVER_DIRECTION_RULES.get(driver, {})
@@ -591,3 +630,33 @@ class CalaRefreshService:
             }
         )
         return payload
+
+
+class CalaSearchService:
+    async def search(self, query: str) -> dict[str, Any]:
+        api_key = os.getenv("CALA_API_KEY")
+        if not api_key:
+            raise RuntimeError("CALA_API_KEY not found in process environment.")
+
+        async with httpx.AsyncClient(
+            base_url="https://api.cala.ai/v1",
+            timeout=REQUEST_TIMEOUT_SECONDS,
+            headers={"X-API-KEY": api_key},
+        ) as client:
+            response = await client.post(
+                "/knowledge/search",
+                json={"input": query},
+            )
+            response.raise_for_status()
+            body = response.json()
+
+        if not isinstance(body, dict):
+            raise RuntimeError(f"Unexpected Cala search response shape: {body}")
+
+        return {
+            "query": query,
+            "content": str(body.get("content", "")).strip() or "Cala returned an empty answer.",
+            "explainability": _normalize_text_list(body.get("explainability")),
+            "context": _normalize_text_list(body.get("context")),
+            "entities": _normalize_entity_list(body.get("entities")),
+        }
