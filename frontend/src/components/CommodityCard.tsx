@@ -80,8 +80,6 @@ export function CommodityCard({ commodity }: CommodityCardProps) {
           <MiniSparkline values={sparklineValues} />
         </div>
 
-        <p className="supporting-copy">{commodity.explanation}</p>
-
         <div className="change-row">
           <span className={commodity.changed ? "delta-badge changed" : "delta-badge"}>
             {commodity.changed ? "Changed since last update" : "Stable versus last update"}
