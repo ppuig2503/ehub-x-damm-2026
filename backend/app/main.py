@@ -98,6 +98,8 @@ async def refresh_cala(payload: RefreshRequest) -> dict:
         "signals_available": len(refreshed_payload["signals"]),
         "commodity_scope": payload.commodity or "all",
         "driver_scope": payload.drivers or [],
+        "query_count": refreshed_payload.get("meta", {}).get("query_count", 0),
+        "duration_seconds": refreshed_payload.get("meta", {}).get("duration_seconds"),
         "debug_error": result.get("debug_error"),
     }
 

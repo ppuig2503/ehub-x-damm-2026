@@ -161,6 +161,8 @@ export interface RefreshResponse {
   signals_available: number;
   commodity_scope: string;
   driver_scope: string[];
+  query_count: number;
+  duration_seconds?: number | null;
 }
 
 export interface CalaSearchResponse {

@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import (
+    CALA_REFRESH_DEBUG_PATH,
     COMMODITIES_SEED_PATH,
     DEFAULT_GENERATED_AT,
     HISTORICAL_BENCHMARKS_SEED_PATH,
@@ -113,4 +114,10 @@ def append_refresh_log(entry: dict[str, Any]) -> None:
 def write_runtime_signals(payload: dict[str, Any]) -> None:
     RUNTIME_SIGNALS_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(RUNTIME_SIGNALS_PATH, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2)
+
+
+def write_cala_refresh_debug(payload: dict[str, Any]) -> None:
+    CALA_REFRESH_DEBUG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(CALA_REFRESH_DEBUG_PATH, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2)

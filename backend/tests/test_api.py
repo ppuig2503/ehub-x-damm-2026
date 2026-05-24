@@ -13,6 +13,14 @@ def test_overview_endpoint():
     assert len(payload["commodities"]) == 4
 
 
+def test_refresh_response_shape():
+    response = client.post("/api/v1/cala/refresh", json={})
+    assert response.status_code == 200
+    payload = response.json()
+    assert "query_count" in payload
+    assert "duration_seconds" in payload
+
+
 def test_signals_filter_endpoint():
     response = client.get("/api/v1/signals", params={"commodity": "barley", "limit": 3})
     assert response.status_code == 200

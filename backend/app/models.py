@@ -155,6 +155,8 @@ class RefreshResponse(BaseModel):
     signals_available: int
     commodity_scope: str
     driver_scope: list[str]
+    query_count: int = 0
+    duration_seconds: float | None = None
     debug_error: str | None = None
 
 

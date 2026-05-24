@@ -3,13 +3,19 @@ from __future__ import annotations
 import hashlib
 import re
 import os
+import time
 from datetime import datetime
 from typing import Any
 
 import httpx
 
 from .config import DEFAULT_GENERATED_AT
-from .data_store import append_refresh_log, load_seed_signals_payload, write_runtime_signals
+from .data_store import (
+    append_refresh_log,
+    load_seed_signals_payload,
+    write_cala_refresh_debug,
+    write_runtime_signals,
+)
 
 REQUEST_TIMEOUT_SECONDS = 600.0
 
@@ -430,6 +436,7 @@ class CalaRefreshService:
         commodity: str | None,
         drivers: list[str] | None,
     ) -> dict[str, Any]:
+        started_at = time.perf_counter()
         scoped_commodities = [commodity] if commodity else list(CALA_QUERY_MAP.keys())
         query_specs: list[dict[str, str]] = []
         for item in scoped_commodities:
@@ -464,6 +471,7 @@ class CalaRefreshService:
                             "query": spec["query"],
                             "rows": len(results),
                             "signals": len(normalized),
+                            "results_payload": results,
                             "error": None,
                         }
                     )
@@ -476,6 +484,7 @@ class CalaRefreshService:
                             "query": spec["query"],
                             "rows": 0,
                             "signals": 0,
+                            "results_payload": [],
                             "error": str(exc),
                         }
                     )
@@ -490,16 +499,31 @@ class CalaRefreshService:
             "meta": {
                 "source": "cala",
                 "queries": debug_queries,
+                "query_count": len(query_specs),
+                "duration_seconds": round(time.perf_counter() - started_at, 2),
             },
         }
         payload["generated_at"] = datetime.now().astimezone().isoformat(timespec="seconds")
         write_runtime_signals(payload)
+        write_cala_refresh_debug(
+            {
+                "generated_at": payload["generated_at"],
+                "refresh_status": "live",
+                "commodity_scope": commodity or "all",
+                "driver_scope": drivers or [],
+                "query_count": len(query_specs),
+                "duration_seconds": payload["meta"]["duration_seconds"],
+                "queries": debug_queries,
+            }
+        )
         append_refresh_log(
             {
                 "generated_at": payload["generated_at"],
                 "status": "live",
                 "commodity": commodity or "all",
                 "drivers": drivers or [],
+                "query_count": len(query_specs),
+                "duration_seconds": payload["meta"]["duration_seconds"],
                 "debug_error": None,
             }
         )
@@ -598,14 +622,30 @@ class CalaRefreshService:
         payload["meta"] = {
             "source": "demo_live_refresh",
             "queries": CALA_QUERY_MAP.get(commodity, []),
+            "query_count": len(CALA_QUERY_MAP.get(commodity, [])) if commodity else sum(len(items) for items in CALA_QUERY_MAP.values()),
+            "duration_seconds": 0.0,
         }
         write_runtime_signals(payload)
+        write_cala_refresh_debug(
+            {
+                "generated_at": generated_at,
+                "refresh_status": "live",
+                "commodity_scope": commodity or "all",
+                "driver_scope": drivers or [],
+                "query_count": payload["meta"]["query_count"],
+                "duration_seconds": 0.0,
+                "queries": payload["meta"]["queries"],
+                "mode": "demo_live_refresh",
+            }
+        )
         append_refresh_log(
             {
                 "generated_at": generated_at,
                 "status": "live",
                 "commodity": commodity or "all",
                 "drivers": drivers or [],
+                "query_count": payload["meta"]["query_count"],
+                "duration_seconds": payload["meta"]["duration_seconds"],
                 "debug_error": None,
             }
         )
@@ -618,14 +658,30 @@ class CalaRefreshService:
         payload["meta"] = {
             "source": "local_fallback",
             "queries": [],
+            "query_count": 0,
+            "duration_seconds": None,
         }
         write_runtime_signals(payload)
+        write_cala_refresh_debug(
+            {
+                "generated_at": DEFAULT_GENERATED_AT,
+                "refresh_status": "fallback",
+                "commodity_scope": "all",
+                "driver_scope": [],
+                "query_count": 0,
+                "duration_seconds": None,
+                "queries": [],
+                "mode": "local_fallback",
+            }
+        )
         append_refresh_log(
             {
                 "generated_at": DEFAULT_GENERATED_AT,
                 "status": "fallback",
                 "commodity": "all",
                 "drivers": [],
+                "query_count": 0,
+                "duration_seconds": None,
                 "debug_error": None,
             }
         )

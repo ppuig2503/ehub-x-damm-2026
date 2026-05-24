@@ -19,6 +19,7 @@ HISTORICAL_BENCHMARKS_SEED_PATH = SEEDS_DIR / "historical_benchmarks.json"
 BARLEY_CSV_PATH = RAW_DIR / "ordi_train_public.csv"
 RUNTIME_SIGNALS_PATH = RUNTIME_DIR / "signals_latest.json"
 REFRESH_LOG_PATH = RUNTIME_DIR / "refresh_log.json"
+CALA_REFRESH_DEBUG_PATH = RUNTIME_DIR / "cala_refresh_debug.json"
 
 DEFAULT_GENERATED_AT = "2026-05-23T09:30:00+02:00"
 

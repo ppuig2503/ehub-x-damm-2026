@@ -37,7 +37,11 @@ export function RefreshSignalsButton() {
     });
     try {
       const response = await refreshSignals();
-      setMessage(`${response.status.toUpperCase()}: ${response.message}`);
+      const durationText =
+        response.duration_seconds != null
+          ? ` ${response.query_count} Cala queries completed in ${response.duration_seconds.toFixed(1)}s.`
+          : "";
+      setMessage(`${response.status.toUpperCase()}: ${response.message}${durationText}`);
       writeRefreshState({
         active: false,
         startedAt: null,
