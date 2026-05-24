@@ -266,6 +266,11 @@ class SmartBuyEngine:
             quantitative_score=quantitative_score,
         )
 
+        history_slice = trend[-12:] if trend else []
+        history_start = history_slice[0]["date"] if history_slice else None
+        history_end = history_slice[-1]["date"] if history_slice else None
+        history_dates = [point["date"] for point in history_slice]
+
         overview = {
             "id": commodity_id,
             "name": COMMODITY_NAMES[commodity_id],
@@ -294,6 +299,9 @@ class SmartBuyEngine:
             "history_source": commodity.get("history_source", "local_fallback"),
             "history_label": commodity.get("history_label", commodity["proxy_label"]),
             "history_note": commodity.get("history_note"),
+            "history_start": history_start,
+            "history_end": history_end,
+            "history_dates": history_dates,
             "explanation": explanation,
         }
 

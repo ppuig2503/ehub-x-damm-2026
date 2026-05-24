@@ -55,6 +55,9 @@ export interface CommodityOverview {
   history_source: "cala_benchmark" | "local_fallback" | "barley_csv";
   history_label: string;
   history_note?: string | null;
+  history_start?: string | null;
+  history_end?: string | null;
+  history_dates?: string[] | null;
   explanation: string;
 }
 

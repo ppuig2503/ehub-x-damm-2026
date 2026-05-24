@@ -1,8 +1,15 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+import { formatDate } from "@/lib/format";
+
 type MiniSparklineProps = {
   values: number[];
+  dates?: string[];
 };
 
-export function MiniSparkline({ values }: MiniSparklineProps) {
+export function MiniSparkline({ values, dates }: MiniSparklineProps) {
   if (!values.length) {
     return null;
   }
@@ -15,6 +22,14 @@ export function MiniSparkline({ values }: MiniSparklineProps) {
     const y = 100 - ((value - min) / range) * 100;
     return { x, y };
   });
+
+  const normalizedDates = useMemo(() => {
+    if (!dates?.length) return null;
+    if (dates.length === values.length) return dates;
+    return null;
+  }, [dates, values.length]);
+
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   function catmullRom2bezier(points: { x: number; y: number }[]) {
     if (points.length === 1) return `M ${points[0].x},${points[0].y}`;
@@ -36,18 +51,78 @@ export function MiniSparkline({ values }: MiniSparklineProps) {
   }
 
   const pathD = catmullRom2bezier(pts);
+  const areaD = `${pathD} L 100,100 L 0,100 Z`;
+  const lastPoint = pts[pts.length - 1];
+
+  const activePoint = activeIndex !== null ? pts[activeIndex] : null;
+  const activeDate =
+    activeIndex !== null && normalizedDates
+      ? normalizedDates[activeIndex]
+      : null;
 
   return (
-    <svg className="sparkline" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <path
-        d={pathD}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <div className="sparkline-wrap">
+      <svg className="sparkline" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="sparklineGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="currentColor" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path
+          d={areaD}
+          className="sparkline-area"
+          fill="url(#sparklineGradient)"
+        />
+        <path
+          d={pathD}
+          className="sparkline-line"
+          fill="none"
+          stroke="currentColor"
+          vectorEffect="non-scaling-stroke"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {pts.map((point, index) => (
+          <circle
+            key={`spark-point-${index}`}
+            className={
+              activeIndex === index
+                ? "sparkline-point active"
+                : "sparkline-point"
+            }
+            cx={point.x}
+            cy={point.y}
+            r={activeIndex === index ? 3.8 : 2.6}
+            vectorEffect="non-scaling-stroke"
+            tabIndex={0}
+            onMouseEnter={() => setActiveIndex(index)}
+            onFocus={() => setActiveIndex(index)}
+            onMouseLeave={() => setActiveIndex(null)}
+            onBlur={() => setActiveIndex(null)}
+          />
+        ))}
+        <circle
+          className="sparkline-end"
+          cx={lastPoint.x}
+          cy={lastPoint.y}
+          r="3.6"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      {activePoint && activeDate ? (
+        <div
+          className="sparkline-tooltip"
+          style={{
+            left: `${activePoint.x}%`,
+            top: `${activePoint.y}%`,
+          }}
+        >
+          {formatDate(activeDate)}
+        </div>
+      ) : null}
+    </div>
   );
 }
 

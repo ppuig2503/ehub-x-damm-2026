@@ -66,6 +66,9 @@ class CommodityOverview(BaseModel):
     history_source: Literal["cala_benchmark", "local_fallback", "barley_csv"]
     history_label: str
     history_note: str | None = None
+    history_start: str | None = None
+    history_end: str | None = None
+    history_dates: list[str] | None = None
     explanation: str
 
 
