@@ -22,7 +22,7 @@ const monoFont = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SmartBuy Signal OS",
+  title: "DammBuy",
   description: "Procurement cockpit for explainable commodity buy, wait, hedge, and monitor decisions.",
 };
 

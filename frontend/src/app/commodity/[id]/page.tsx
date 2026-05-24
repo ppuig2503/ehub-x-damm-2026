@@ -74,7 +74,7 @@ export default async function CommodityDetailPage({ params }: CommodityDetailPag
           <div className="panel-heading">
             <div>
               <span className="eyebrow">Explanation card</span>
-              <h3>Why SmartBuy recommends this move</h3>
+              <h3>Why DammBuy recommends this move</h3>
             </div>
           </div>
           <p>{detail.recommendation.explanation}</p>

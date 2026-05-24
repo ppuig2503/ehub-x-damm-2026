@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .cala_client import CalaRefreshService, CalaSearchService
 from .data_store import load_commodities_payload, load_scenarios_payload, load_signals_payload
-from .decision_engine import SmartBuyEngine
+from .decision_engine import DammBuyEngine
 from .models import (
     CommodityDetail,
     CalaSearchRequest,
@@ -20,7 +20,7 @@ from .models import (
     ScenarioResult,
 )
 
-app = FastAPI(title="SmartBuy Signal OS API", version="0.1.0")
+app = FastAPI(title="DammBuy API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,10 +30,10 @@ app.add_middleware(
 )
 
 
-def build_engine() -> SmartBuyEngine:
+def build_engine() -> DammBuyEngine:
     signals_payload, refresh_status = load_signals_payload()
     commodities_payload = load_commodities_payload()
-    return SmartBuyEngine(
+    return DammBuyEngine(
         commodities_payload=commodities_payload,
         signals_payload=signals_payload,
         generated_at=signals_payload["generated_at"],

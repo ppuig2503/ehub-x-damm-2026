@@ -1,6 +1,6 @@
-# SmartBuy Signal OS
+# DammBuy
 
-SmartBuy Signal OS is a local-first procurement cockpit built for the Damm x Engineering HUB Hackathon 2026. It combines Cala-derived market evidence, deterministic scoring, historical benchmark series, and scenario stress testing into a single procurement decision surface.
+DammBuy is a local-first procurement cockpit built for the Damm x Engineering HUB Hackathon 2026. It combines Cala-derived market evidence, deterministic scoring, historical benchmark series, and scenario stress testing into a single procurement decision surface.
 
 The app currently covers 4 commodities:
 - `aluminium`
@@ -266,7 +266,7 @@ Current operational outputs:
 
 There are 2 different lines in the commodity detail charts:
 
-- `SmartBuy score`
+- `DammBuy score`
   a heuristic score history reconstructed from current signal strength and normalized benchmark history
 - `benchmark`
   the stored market benchmark series for that commodity

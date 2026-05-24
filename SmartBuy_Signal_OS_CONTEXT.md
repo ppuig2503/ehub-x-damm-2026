@@ -1,8 +1,8 @@
-# SmartBuy Signal OS — Contexto de producto e implementación
+# DammBuy — Contexto de producto e implementación
 
 ## 1. Contexto del hackathon
 
-Estamos participando en el **Damm x Engineering HUB Hackathon 2026** y hemos decidido trabajar en el reto **SmartBuy**, orientado al área de Compras.
+Estamos participando en el **Damm x Engineering HUB Hackathon 2026** y hemos decidido trabajar en el reto **DammBuy**, orientado al área de Compras.
 
 El reto consiste en construir una herramienta que ayude a decidir si conviene:
 
@@ -28,23 +28,23 @@ El objetivo no es hacer un dashboard descriptivo ni una predicción exacta de pr
 
 Nombre provisional:
 
-# SmartBuy Signal OS
+# DammBuy
 
 Frase de producto:
 
-> SmartBuy Signal OS convierte precios, eventos, regulación, geopolítica, inventarios, energía, clima y señales externas en recomendaciones accionables para Compras: comprar, esperar, cubrirse o monitorizar.
+> DammBuy convierte precios, eventos, regulación, geopolítica, inventarios, energía, clima y señales externas en recomendaciones accionables para Compras: comprar, esperar, cubrirse o monitorizar.
 
 Frase para la demo:
 
-> Compras consulta muchas fuentes separadas. SmartBuy las convierte en señales comparables, calcula un score de riesgo y genera una recomendación explicable con evidencias trazables.
+> Compras consulta muchas fuentes separadas. DammBuy las convierte en señales comparables, calcula un score de riesgo y genera una recomendación explicable con evidencias trazables.
 
 ---
 
 ## 3. Decisión estratégica
 
-Hemos decidido apostar por **SmartBuy**.
+Hemos decidido apostar por **DammBuy**.
 
-La razón es que, aunque MarketPulse era una opción más directa, SmartBuy tiene más potencial diferencial y visual si se plantea como un cockpit de inteligencia de mercado.
+La razón es que, aunque MarketPulse era una opción más directa, DammBuy tiene más potencial diferencial y visual si se plantea como un cockpit de inteligencia de mercado.
 
 La clave es no plantearlo como:
 
@@ -113,7 +113,7 @@ Normalized Signal Lake
         ↓
 Decision Engine
         ↓
-Interactive SmartBuy UI
+Interactive DammBuy UI
 ```
 
 Capas:
@@ -454,7 +454,7 @@ Debe responder:
 
 Arriba:
 
-- SmartBuy Decision Cockpit.
+- DammBuy Decision Cockpit.
 - Fecha de última actualización.
 - Estado general del mercado: Stable / Watch / High Risk.
 - Número de señales nuevas en últimas 24/48/72 horas.
@@ -528,7 +528,7 @@ Bloques principales:
 Gráfico temporal con:
 
 - precio o índice si existe;
-- score SmartBuy;
+- score DammBuy;
 - media móvil;
 - volatilidad;
 - eventos anotados.
@@ -761,7 +761,7 @@ Tabla priorizada:
 
 Texto generado automáticamente:
 
-> Esta semana SmartBuy recomienda priorizar cobertura parcial en aluminio y energía. PET presenta señales mixtas y debería monitorizarse. Cebada muestra una señal cuantitativa moderada en el dataset, pero requiere confirmación con drivers externos de clima y cosecha.
+> Esta semana DammBuy recomienda priorizar cobertura parcial en aluminio y energía. PET presenta señales mixtas y debería monitorizarse. Cebada muestra una señal cuantitativa moderada en el dataset, pero requiere confirmación con drivers externos de clima y cosecha.
 
 ### Follow-up triggers
 
@@ -920,7 +920,7 @@ Elementos visuales clave:
 Narrativa recomendada:
 
 1. “Compras consulta muchas fuentes separadas.”
-2. “SmartBuy convierte esas fuentes en señales comparables.”
+2. “DammBuy convierte esas fuentes en señales comparables.”
 3. Home: “Hoy el mayor riesgo está en aluminium y energy.”
 4. Commodity Detail: “Entramos en aluminium y vemos recomendación de cobertura parcial.”
 5. Driver Breakdown: “La presión viene de energía, inventarios y supply disruption.”
@@ -965,7 +965,7 @@ Pegar en Codex:
 ```text
 Read the challenge brief, the Cala skill, and CONTEXT.md. Do not implement yet.
 
-First produce a detailed implementation plan for the MVP of SmartBuy Signal OS.
+First produce a detailed implementation plan for the MVP of DammBuy.
 
 Include:
 1. recommended tech stack,

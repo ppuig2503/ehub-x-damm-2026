@@ -122,7 +122,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
                   <summary aria-label="Evidence terms help">?</summary>
                   <div className="micro-help-card align-left">
                     <p><strong>Confidence</strong> = how reliable the signal looks based on source quality and supporting context.</p>
-                    <p><strong>Coverage</strong> = the share of expected buying volume SmartBuy suggests securing now.</p>
+                    <p><strong>Coverage</strong> = the share of expected buying volume DammBuy suggests securing now.</p>
                   </div>
                 </details>
               </div>

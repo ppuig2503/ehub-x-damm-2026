@@ -31,7 +31,7 @@ class CommodityComputation:
     detail: dict[str, Any]
 
 
-class SmartBuyEngine:
+class DammBuyEngine:
     def __init__(
         self,
         commodities_payload: dict[str, Any],
@@ -356,7 +356,7 @@ class SmartBuyEngine:
         overview = self.overview_payload()
         ranked = sorted(overview["commodities"], key=lambda item: item["risk_score"], reverse=True)
         memo = (
-            f"This week SmartBuy prioritises {ranked[0]['name']} and {ranked[1]['name']} for action. "
+            f"This week DammBuy prioritises {ranked[0]['name']} and {ranked[1]['name']} for action. "
             f"{ranked[0]['name']} sits at {ranked[0]['risk_score']:.0f}/100 with a "
             f"{ranked[0]['recommended_action']} recommendation, while {ranked[-1]['name']} remains "
             f"lower urgency and better suited to {ranked[-1]['recommended_action']}."

@@ -84,7 +84,7 @@ export function TrendChart({ points, historyLabel, historySource, historyNote }:
         <div className="legend">
           <span className="legend-item">
             <span className="legend-swatch risk-line" />
-            SmartBuy score
+            DammBuy score
           </span>
           <span className="legend-item">
             <span className="legend-swatch proxy-line" />

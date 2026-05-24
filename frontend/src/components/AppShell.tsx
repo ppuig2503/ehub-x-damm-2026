@@ -20,7 +20,7 @@ export function AppShell({ children, currentPath = "/" }: AppShellProps) {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand-block">
-          <span className="eyebrow">SmartBuy Signal OS</span>
+          <span className="eyebrow">DammBuy</span>
           <div>
             <h1>Procurement decision cockpit</h1>
             <p>

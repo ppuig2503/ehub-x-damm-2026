@@ -19,7 +19,7 @@ export default async function HomePage() {
           <span className="eyebrow">Procurement Radar</span>
           <h2>Today&apos;s highest buying pressure sits in {topRisks.map((item) => item.name).join(" and ")}.</h2>
           <p>
-            SmartBuy normalizes external signals, blends them with proxy data, and
+            DammBuy normalizes external signals, blends them with proxy data, and
             keeps the barley dataset in the decision loop without pretending it is an exact price series.
           </p>
         </div>

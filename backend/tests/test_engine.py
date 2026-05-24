@@ -1,11 +1,11 @@
 from backend.app.data_store import load_commodities_payload, load_seed_signals_payload
-from backend.app.decision_engine import SmartBuyEngine
+from backend.app.decision_engine import DammBuyEngine
 
 
 def build_engine():
     signals_payload = load_seed_signals_payload()
     commodities_payload = load_commodities_payload()
-    return SmartBuyEngine(
+    return DammBuyEngine(
         commodities_payload=commodities_payload,
         signals_payload=signals_payload,
         generated_at=signals_payload["generated_at"],
