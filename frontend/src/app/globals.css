@@ -79,6 +79,22 @@ select {
   text-transform: uppercase;
 }
 
+/* Make headings/titles bolder and increase letter-spacing for readability */
+h1, h2, h3, h4, h5, h6,
+.brand-block h1,
+.hero-copy h2,
+.detail-hero h2,
+.panel-heading h3,
+.priority-header span,
+.evidence-header span,
+.commodity-card h2,
+.nav-chip > span > span:first-child,
+.panel-heading h3,
+.eyebrow {
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+}
+
 .brand-block p,
 .hero-copy p,
 .detail-hero p,
@@ -120,7 +136,7 @@ select {
 }
 
 .nav-chip {
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(226, 129, 34, 0.5);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -134,7 +150,7 @@ select {
   white-space: normal;
   text-wrap: balance;
   word-break: break-word;
-  box-shadow: 0 10px 18px rgba(122, 84, 14, 0.18);
+  box-shadow: 0 16px 28px rgba(122, 84, 14, 0.28), 0 0 18px rgba(255, 210, 90, 0.22);
   clip-path: polygon(50% 4%, 61% 36%, 95% 36%, 67% 56%, 78% 90%, 50% 70%, 22% 90%, 33% 56%, 5% 36%, 39% 36%);
   position: relative;
   cursor: pointer;
@@ -230,11 +246,9 @@ select {
 .nav-chip.active {
   border-color: rgba(181, 18, 24, 0.35);
   color: #3b2500;
-  transform: translateY(-6px) scale(1.03);
-  filter: brightness(1.06) saturate(1.15);
-  box-shadow:
-    0 18px 28px rgba(122, 84, 14, 0.28),
-    0 0 22px rgba(255, 210, 90, 0.45);
+  transform: translateY(-4px) scale(1.02);
+  filter: brightness(1.04) saturate(1.08);
+  box-shadow: 0 18px 28px rgba(122, 84, 14, 0.28), 0 0 22px rgba(255, 210, 90, 0.45);
 }
 
 .nav-chip:focus-visible {
@@ -566,6 +580,15 @@ select {
   grid-template-columns: 48px 3fr 1fr 1fr 1fr 1fr;
   align-items: center;
   gap: 1rem;
+}
+
+/* Make table headers larger for readability */
+.priority-header span,
+.evidence-header span,
+.panel-heading h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 /* priority-reason styling defined later to keep alignment consistent */
@@ -1064,6 +1087,7 @@ select {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+  align-items: stretch; /* ensure each grid cell fills the row so fields can align */
 }
 
 .filter-grid {
@@ -1075,6 +1099,8 @@ select {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  height: 100%;
+  justify-content: space-between; /* push control to the bottom so inputs align across the row */
 }
 
 .field input,
@@ -1168,6 +1194,14 @@ select,
   cursor: pointer;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' stroke='%23FFF7EC' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Make select and inputs inside `.field` a consistent height so controls align visually */
+.field select,
+.field input {
+  min-height: 3.2rem;
+  height: 3.2rem;
+  display: block;
 }
 
 select option,
@@ -1277,16 +1311,17 @@ select:focus {
 .heatmap-row,
 .priority-header,
 .priority-row {
-  padding: 0.9rem 1rem;
+  padding: 0.5rem 1rem; /* reduced vertical padding to tighten rows */
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.03);
 }
 
 .priority-header {
   display: grid;
-  grid-template-columns: 60px 1.5fr 120px 110px 110px 110px;
+  /* increase first column and give more space to commodity column */
+  grid-template-columns: 72px 2fr 140px 120px 120px 120px;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   color: var(--accent);
   font-family: var(--font-mono), monospace;
   text-transform: uppercase;
@@ -1296,13 +1331,33 @@ select:focus {
 
 .priority-row {
   display: grid;
-  grid-template-columns: 60px 1.5fr 120px 110px 110px 110px;
+  grid-template-columns: 72px 2fr 140px 120px 120px 120px;
   align-items: center;
 }
 
 .priority-reason {
   grid-column: 2 / -1;
   margin: 0;
+}
+
+/* Make priority row text larger, but keep the action pill (Buy) as defined */
+.priority-row > span {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.04; /* tighter line-height */
+}
+
+.priority-row .priority-reason {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 0.32rem; /* reduce gap above reason copy */
+}
+
+.priority-row .status-pill {
+  /* ensure pills keep their own sizing/styling */
+  font-size: 1.25rem;
 }
 
 .text-link {
@@ -1460,6 +1515,14 @@ select:focus {
 }
 
 /* Evidence page: hide star filigree for all panels that appear after the red hero-panel */
+.evidence-header span,
+.priority-header span {
+  /* make these table header labels smaller than main headings */
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+}
+
 .hero-panel ~ .panel::before,
 .two-column-layout.evidence-layout .panel::before {
   display: none !important;
