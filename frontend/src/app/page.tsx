@@ -49,23 +49,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="metrics-strip">
-        <div className="signal-counter">
-          <span>24h</span>
-          <strong>{overview.new_signals["24h"]}</strong>
-        </div>
-        <div className="signal-counter">
-          <span>48h</span>
-          <strong>{overview.new_signals["48h"]}</strong>
-        </div>
-        <div className="signal-counter">
-          <span>72h</span>
-          <strong>{overview.new_signals["72h"]}</strong>
-        </div>
-        <div className="signal-counter wide">
-          <span>View mode</span>
-          <strong>Risk view / 1-3 months</strong>
-        </div>
+      <section className="inline-actions">
         <RefreshSignalsButton />
       </section>
 
@@ -75,7 +59,7 @@ export default async function HomePage() {
         ))}
       </section>
 
-      <section className="two-column-layout">
+      <section>
         <article className="panel">
           <div className="panel-heading">
             <div>
@@ -92,23 +76,6 @@ export default async function HomePage() {
                   <p className="small-muted">{commodity.change_note}</p>
                 </div>
                 <span>{Math.round(commodity.risk_score)}</span>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="panel">
-          <div className="panel-heading">
-            <div>
-              <span className="eyebrow">What changed</span>
-              <h3>Recommendation movement since last update</h3>
-            </div>
-          </div>
-          <div className="change-list">
-            {overview.commodities.map((commodity) => (
-              <div key={commodity.id} className="change-item">
-                <h4>{commodity.name}</h4>
-                <p>{commodity.change_note}</p>
               </div>
             ))}
           </div>
