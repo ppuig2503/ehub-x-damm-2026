@@ -12,6 +12,13 @@ export function formatDate(value: string) {
   }).format(new Date(value));
 }
 
+export function formatMonthYear(value: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    month: "short",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
 export function titleize(value: string) {
   return value
     .replace(/_/g, " ")

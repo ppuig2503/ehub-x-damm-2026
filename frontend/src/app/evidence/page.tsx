@@ -20,7 +20,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
   const commodity = getSingleValue(params.commodity);
   const driver = getSingleValue(params.driver);
   const direction = getSingleValue(params.direction);
-  const minImpact = getSingleValue(params.minImpact);
+  const minImpact = getSingleValue(params.min_impact);
 
   if (commodity) query.set("commodity", commodity);
   if (driver) query.set("driver", driver);
@@ -31,6 +31,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
   const payload = await getSignals(query.toString());
   const bullishCount = payload.signals.filter((signal) => signal.direction === "bullish").length;
   const bearishCount = payload.signals.filter((signal) => signal.direction === "bearish").length;
+  const neutralCount = payload.signals.filter((signal) => signal.direction === "neutral").length;
   const heatmap = Array.from(
     payload.signals.reduce((map, signal) => {
       const key = `${signal.commodity}-${signal.driver}`;
@@ -68,6 +69,10 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
             <span className="metric-title bearish">Bearish</span>
             <strong>{bearishCount}</strong>
           </div>
+          <div className="hero-metric">
+            <span className="metric-title neutral">Neutral</span>
+            <strong>{neutralCount}</strong>
+          </div>
         </div>
       </section>
 
@@ -75,7 +80,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
         <form className="filter-grid" method="get">
           <label className="field">
             <span>Commodity</span>
-            <select name="commodity" defaultValue={commodity || ""}>
+            <select key={`commodity-${commodity || "none"}`} name="commodity" defaultValue={commodity || ""}>
               <option value="">All</option>
               <option value="aluminium">Aluminium</option>
               <option value="pet">PET</option>
@@ -85,11 +90,11 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
           </label>
           <label className="field">
             <span>Driver</span>
-            <input type="text" name="driver" defaultValue={driver || ""} placeholder="energy, weather..." />
+            <input key={`driver-${driver || "none"}`} type="text" name="driver" defaultValue={driver || ""} placeholder="energy, weather..." />
           </label>
           <label className="field">
             <span>Direction</span>
-            <select name="direction" defaultValue={direction || ""}>
+            <select key={`direction-${direction || "none"}`} name="direction" defaultValue={direction || ""}>
               <option value="">All</option>
               <option value="bullish">Bullish</option>
               <option value="bearish">Bearish</option>
@@ -98,7 +103,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
           </label>
           <label className="field">
             <span>Minimum impact</span>
-            <input type="number" min="0" max="1" step="0.05" name="minImpact" defaultValue={minImpact || ""} />
+            <input key={`minimpact-${minImpact || "none"}`} type="number" min="0" max="1" step="0.05" name="min_impact" defaultValue={minImpact || ""} />
           </label>
           <button type="submit" className="action-button">
             Apply filters
@@ -123,7 +128,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
               </div>
             </div>
           </div>
-          <EvidenceTable signals={payload.signals} />
+          <EvidenceTable signals={payload.signals} pageSize={7} />
         </section>
 
         <section className="panel">
