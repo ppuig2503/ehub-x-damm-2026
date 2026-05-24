@@ -502,10 +502,50 @@ h1, h2, h3, h4, h5, h6,
   padding: 1.5rem;
 }
 
+.commodity-card-link {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  color: inherit;
+}
+
 .commodity-card h2 {
   font-size: 1.85rem;
   margin: 0.2rem 0;
   font-family: var(--font-display), sans-serif;
+}
+
+.sparkline-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.sparkline-toggle {
+  display: inline-flex;
+  padding: 0.18rem;
+  border: 1px solid rgba(181, 18, 24, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.sparkline-toggle button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.28rem 0.62rem;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sparkline-toggle button.active {
+  background: linear-gradient(120deg, #ff8a8a 6%, #e05a5a 60%);
+  color: #fff7ec;
 }
 
 .commodity-card:hover {
@@ -955,6 +995,12 @@ h1, h2, h3, h4, h5, h6,
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+}
+
+.history-fallback-note {
+  margin: -0.2rem 0 0.2rem;
+  color: var(--warning);
+  font-size: 0.88rem;
 }
 
 .legend-item {

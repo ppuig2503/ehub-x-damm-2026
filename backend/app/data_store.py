@@ -6,6 +6,8 @@ from typing import Any
 
 from .config import (
     COMMODITIES_SEED_PATH,
+    DEFAULT_GENERATED_AT,
+    HISTORICAL_BENCHMARKS_SEED_PATH,
     REFRESH_LOG_PATH,
     RUNTIME_SIGNALS_PATH,
     SCENARIOS_SEED_PATH,
@@ -31,8 +33,65 @@ def load_seed_signals_payload() -> dict[str, Any]:
     return _load_json(SIGNALS_SEED_PATH)
 
 
+def load_historical_benchmarks_payload() -> dict[str, Any]:
+    if not HISTORICAL_BENCHMARKS_SEED_PATH.exists():
+        return {"generated_at": DEFAULT_GENERATED_AT, "series": []}
+    return _load_json(HISTORICAL_BENCHMARKS_SEED_PATH)
+
+
 def load_commodities_payload() -> dict[str, Any]:
-    return _load_json(COMMODITIES_SEED_PATH)
+    payload = _load_json(COMMODITIES_SEED_PATH)
+    history_payload = load_historical_benchmarks_payload()
+    history_by_commodity = {
+        item["commodity"]: item
+        for item in history_payload.get("series", [])
+        if isinstance(item, dict) and item.get("commodity")
+    }
+
+    merged_commodities: list[dict[str, Any]] = []
+    for commodity in payload["commodities"]:
+        merged = dict(commodity)
+        if commodity["id"] == "barley":
+            merged.update(
+                {
+                    "history_source": "barley_csv",
+                    "history_label": commodity["proxy_label"],
+                    "history_value_label": commodity["proxy_value_label"],
+                    "history_note": None,
+                    "history_series": commodity["proxy_series"],
+                    "history_query": None,
+                }
+            )
+        else:
+            history = history_by_commodity.get(commodity["id"])
+            if history:
+                merged.update(
+                    {
+                        "history_source": history.get("series_type", "local_fallback"),
+                        "history_label": history.get("label", commodity["proxy_label"]),
+                        "history_value_label": history.get("value_label", "Benchmark value"),
+                        "history_note": history.get("source_note"),
+                        "history_series": history.get("points", commodity["proxy_series"]),
+                        "history_query": history.get("query"),
+                    }
+                )
+            else:
+                merged.update(
+                    {
+                        "history_source": "local_fallback",
+                        "history_label": commodity["proxy_label"],
+                        "history_value_label": commodity["proxy_value_label"],
+                        "history_note": "Local fallback history in use until Cala benchmark seed data is generated.",
+                        "history_series": commodity["proxy_series"],
+                        "history_query": None,
+                    }
+                )
+        merged_commodities.append(merged)
+
+    return {
+        **payload,
+        "commodities": merged_commodities,
+    }
 
 
 def load_scenarios_payload() -> dict[str, Any]:
@@ -55,4 +114,3 @@ def write_runtime_signals(payload: dict[str, Any]) -> None:
     RUNTIME_SIGNALS_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(RUNTIME_SIGNALS_PATH, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2)
-

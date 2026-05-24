@@ -21,6 +21,15 @@ def test_signals_filter_endpoint():
     assert all(signal["commodity"] == "barley" for signal in payload["signals"])
 
 
+def test_commodity_detail_exposes_history_metadata():
+    response = client.get("/api/v1/commodities/aluminium")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["history_source"] in {"cala_benchmark", "local_fallback"}
+    assert payload["history_label"]
+    assert payload["latest_history_value"] > 0
+
+
 def test_scenario_endpoint():
     response = client.post(
         "/api/v1/scenarios/evaluate",

@@ -58,12 +58,12 @@ class SmartBuyEngine:
         external_score: float,
         quantitative_score: float | None = None,
     ) -> list[dict[str, Any]]:
-        proxy_series = commodity["proxy_series"]
-        values = [point["value"] for point in proxy_series]
+        chart_series = commodity.get("history_series", commodity["proxy_series"])
+        values = [point["value"] for point in chart_series]
         base_mean = mean(values)
         base_std = pstdev(values) if len(values) > 1 else 1
         trend: list[dict[str, Any]] = []
-        for point in proxy_series:
+        for point in chart_series:
             proxy_normalized = 50 + ((point["value"] - base_mean) / base_std) * 10
             if quantitative_score is not None:
                 score = clamp((proxy_normalized * 0.6) + (external_score * 0.4), 0, 100)
@@ -286,6 +286,14 @@ class SmartBuyEngine:
             "refresh_status": self.refresh_status,
             "proxy_label": commodity["proxy_label"],
             "score_history": [point["score"] for point in trend[-12:]],
+            "benchmark_history": (
+                [point["value"] for point in trend[-12:]]
+                if commodity.get("history_source") != "barley_csv"
+                else None
+            ),
+            "history_source": commodity.get("history_source", "local_fallback"),
+            "history_label": commodity.get("history_label", commodity["proxy_label"]),
+            "history_note": commodity.get("history_note"),
             "explanation": explanation,
         }
 
@@ -304,6 +312,11 @@ class SmartBuyEngine:
             "proxy_label": commodity["proxy_label"],
             "proxy_value_label": commodity["proxy_value_label"],
             "latest_proxy_value": round(trend[-1]["value"], 2),
+            "history_source": commodity.get("history_source", "local_fallback"),
+            "history_label": commodity.get("history_label", commodity["proxy_label"]),
+            "history_value_label": commodity.get("history_value_label", commodity["proxy_value_label"]),
+            "latest_history_value": round(trend[-1]["value"], 2),
+            "history_note": commodity.get("history_note"),
             "signals": signals,
             "refresh_status": self.refresh_status,
             "barley_features": barley_features,
@@ -474,4 +487,3 @@ class SmartBuyEngine:
             "geopolitics": round(tier_map[scenario_input["geopolitical_risk"]] * geopolitics_weight, 1),
             "weather": round(tier_map[scenario_input["weather_risk"]] * weather_weight, 1),
         }
-

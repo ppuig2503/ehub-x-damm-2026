@@ -51,6 +51,10 @@ export interface CommodityOverview {
   refresh_status: RefreshStatus;
   proxy_label: string;
   score_history: number[];
+  benchmark_history?: number[] | null;
+  history_source: "cala_benchmark" | "local_fallback" | "barley_csv";
+  history_label: string;
+  history_note?: string | null;
   explanation: string;
 }
 
@@ -76,6 +80,11 @@ export interface CommodityDetail {
   proxy_label: string;
   proxy_value_label: string;
   latest_proxy_value: number;
+  history_source: "cala_benchmark" | "local_fallback" | "barley_csv";
+  history_label: string;
+  history_value_label: string;
+  latest_history_value: number;
+  history_note?: string | null;
   signals: Signal[];
   refresh_status: RefreshStatus;
   barley_features?: Record<string, string | number> | null;
