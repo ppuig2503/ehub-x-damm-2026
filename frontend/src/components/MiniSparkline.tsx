@@ -85,23 +85,31 @@ export function MiniSparkline({ values, dates }: MiniSparklineProps) {
           strokeLinejoin="round"
         />
         {pts.map((point, index) => (
-          <circle
-            key={`spark-point-${index}`}
-            className={
-              activeIndex === index
-                ? "sparkline-point active"
-                : "sparkline-point"
-            }
-            cx={point.x}
-            cy={point.y}
-            r={activeIndex === index ? 3.8 : 2.6}
-            vectorEffect="non-scaling-stroke"
-            tabIndex={0}
-            onMouseEnter={() => setActiveIndex(index)}
-            onFocus={() => setActiveIndex(index)}
-            onMouseLeave={() => setActiveIndex(null)}
-            onBlur={() => setActiveIndex(null)}
-          />
+          <g key={`spark-group-${index}`}>
+            <circle
+              className={`sparkline-hit ${activeIndex === index ? "active" : ""}`}
+              cx={point.x}
+              cy={point.y}
+              r={6}
+              vectorEffect="non-scaling-stroke"
+              tabIndex={0}
+              onMouseEnter={() => setActiveIndex(index)}
+              onFocus={() => setActiveIndex(index)}
+              onMouseLeave={() => setActiveIndex(null)}
+              onBlur={() => setActiveIndex(null)}
+            />
+            <circle
+              className={
+                activeIndex === index
+                  ? "sparkline-point active"
+                  : "sparkline-point"
+              }
+              cx={point.x}
+              cy={point.y}
+              r={2.6}
+              vectorEffect="non-scaling-stroke"
+            />
+          </g>
         ))}
         <circle
           className="sparkline-end"

@@ -676,18 +676,29 @@ h1, h2, h3, h4, h5, h6,
   stroke-width: 1;
   cursor: pointer;
   opacity: 0.7;
-  transition: opacity 160ms ease, transform 160ms ease;
+  transition: transform 160ms ease;
+  transform-box: fill-box;
+  transform-origin: center;
+  vector-effect: non-scaling-stroke;
 }
 
 .sparkline-point:hover,
 .sparkline-point.active {
-  opacity: 1;
+  transform: scale(1.15);
+}
+
+.sparkline-hit {
+  fill: transparent;
+  pointer-events: all;
+  cursor: pointer;
+}
+.sparkline-hit:focus {
+  outline: none;
 }
 
 .sparkline-end {
-  fill: #fff7ec;
-  stroke: currentColor;
-  stroke-width: 2;
+  fill: currentColor; /* solid endpoint matching series color */
+  stroke: none;
 }
 
 .sparkline-tooltip {
@@ -704,6 +715,30 @@ h1, h2, h3, h4, h5, h6,
   white-space: nowrap;
   box-shadow: 0 8px 18px rgba(181, 18, 24, 0.28);
   pointer-events: none;
+}
+
+/* Evidence pagination */
+.evidence-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+.pagination-button {
+  border: 1px solid rgba(181,18,24,0.12);
+  background: transparent;
+  padding: 0.45rem 0.8rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+.pagination-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.pagination-info {
+  font-family: var(--font-mono), monospace;
+  color: var(--muted);
 }
 
 .supporting-copy {
@@ -1041,8 +1076,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .trend-chart {
-  height: 18rem;
+  height: 20rem;
   padding: 0.75rem 0;
+  position: relative;
 }
 
 .trend-chart svg {
@@ -1050,11 +1086,15 @@ h1, h2, h3, h4, h5, h6,
   height: 100%;
 }
 
+.trend-area {
+  filter: drop-shadow(0 6px 10px rgba(181,18,24,0.06));
+}
+
 .trend-line {
-  stroke-width: 1.2;
+  stroke-width: 3;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-opacity: 0.95;
+  stroke-opacity: 0.98;
   transition: stroke-width 140ms ease, stroke-opacity 140ms ease, filter 140ms ease;
 }
 
@@ -1071,9 +1111,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .trend-chart svg .trend-line:hover {
-  stroke-width: 1.8;
+  /* Keep stroke width steady to avoid layout/jump bugs; only emphasize with shadow */
   stroke-opacity: 1;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
 }
 
 .legend {
@@ -1099,6 +1139,73 @@ h1, h2, h3, h4, h5, h6,
   width: 0.8rem;
   height: 0.8rem;
   border-radius: 999px;
+}
+
+.trend-end {
+  fill: currentColor; /* solid circle using series color */
+  stroke: none;
+}
+
+.proxy-end { fill: #ff9a00; }
+.score-end { fill: var(--accent); }
+.proxy-area { }
+.score-area { }
+
+.trend-point {
+  opacity: 0.78; /* slightly muted */
+  transition: transform 120ms ease, opacity 120ms ease, fill-opacity 120ms ease;
+  transform-origin: center;
+  fill-opacity: 0.72;
+  transform-box: fill-box; /* ensure scale is centered on the circle */
+  vector-effect: non-scaling-stroke; /* keep stroke thickness constant */
+}
+.trend-point.proxy-point {
+  fill: #ff9a00;
+}
+.trend-point.score-point {
+  fill: var(--accent);
+}
+.trend-point.active {
+  transform: scale(1.15);
+}
+
+.trend-hit {
+  fill: transparent;
+  pointer-events: all;
+  cursor: pointer;
+}
+.trend-hit:focus {
+  outline: none;
+}
+
+/* Also ensure endpoint markers scale from center and keep stroke width */
+.trend-end {
+  transform-box: fill-box;
+  transform-origin: center;
+  vector-effect: non-scaling-stroke;
+}
+
+.trend-tooltip {
+  position: absolute;
+  transform: translate(-50%, -120%);
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(86, 24, 22, 0.92);
+  color: #fff7ec;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+}
+
+.trend-tooltip.score-tooltip {
+  background: var(--accent);
+}
+.trend-tooltip.proxy-tooltip {
+  background: #ff9a00;
 }
 
 .trend-footer {

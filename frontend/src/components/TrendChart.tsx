@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import { TrendPoint } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 
@@ -44,6 +47,28 @@ export function TrendChart({ points, historyLabel, historySource, historyNote }:
   const scoreValues = points.map((point) => point.score ?? 0);
   const proxyValues = points.map((point) => point.value);
 
+  const scorePts = buildPoints(scoreValues);
+  const proxyPts = buildPoints(proxyValues);
+  const scorePath = catmullRom2bezier(scorePts);
+  const proxyPath = catmullRom2bezier(proxyPts);
+  const scoreArea = `${scorePath} L 100,100 L 0,100 Z`;
+  const proxyArea = `${proxyPath} L 100,100 L 0,100 Z`;
+  const scoreLast = scorePts[scorePts.length - 1];
+  const proxyLast = proxyPts[proxyPts.length - 1];
+
+  const [active, setActive] = useState<{
+    series: "score" | "proxy";
+    index: number;
+  } | null>(null);
+
+  function handleEnter(series: "score" | "proxy", index: number) {
+    setActive({ series, index });
+  }
+
+  function handleLeave() {
+    setActive(null);
+  }
+
   return (
     <section className="panel">
       <div className="panel-heading">
@@ -66,18 +91,89 @@ export function TrendChart({ points, historyLabel, historySource, historyNote }:
         <p className="history-fallback-note">{historyNote}</p>
       ) : null}
       <div className="trend-chart">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path
-              d={catmullRom2bezier(buildPoints(proxyValues))}
-              className="trend-line proxy-line"
-              fill="none"
-            />
-            <path
-              d={catmullRom2bezier(buildPoints(scoreValues))}
-              className="trend-line risk-line"
-              fill="none"
-            />
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="proxyGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ff9a00" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#ff9a00" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="riskGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          <path d={proxyArea} className="trend-area proxy-area" fill="url(#proxyGradient)" />
+          <path d={proxyPath} className="trend-line proxy-line" fill="none" vectorEffect="non-scaling-stroke" />
+
+          <path d={scoreArea} className="trend-area score-area" fill="url(#riskGradient)" />
+          <path d={scorePath} className="trend-line risk-line" fill="none" vectorEffect="non-scaling-stroke" />
+
+          {proxyPts.map((p, i) => (
+            <g key={`proxy-group-${i}`}>
+              <circle
+                className="trend-hit proxy-hit"
+                cx={p.x}
+                cy={p.y}
+                r={6}
+                vectorEffect="non-scaling-stroke"
+                tabIndex={0}
+                onMouseEnter={() => handleEnter("proxy", i)}
+                onFocus={() => handleEnter("proxy", i)}
+                onMouseLeave={handleLeave}
+                onBlur={handleLeave}
+              />
+              <circle
+                className={`trend-point proxy-point ${active?.series === "proxy" && active.index === i ? "active" : ""}`}
+                cx={p.x}
+                cy={p.y}
+                r={2.2}
+                vectorEffect="non-scaling-stroke"
+              />
+            </g>
+          ))}
+          {scorePts.map((p, i) => (
+            <g key={`score-group-${i}`}>
+              <circle
+                className="trend-hit score-hit"
+                cx={p.x}
+                cy={p.y}
+                r={6}
+                vectorEffect="non-scaling-stroke"
+                tabIndex={0}
+                onMouseEnter={() => handleEnter("score", i)}
+                onFocus={() => handleEnter("score", i)}
+                onMouseLeave={handleLeave}
+                onBlur={handleLeave}
+              />
+              <circle
+                className={`trend-point score-point ${active?.series === "score" && active.index === i ? "active" : ""}`}
+                cx={p.x}
+                cy={p.y}
+                r={2.2}
+                vectorEffect="non-scaling-stroke"
+              />
+            </g>
+          ))}
+
+          {proxyLast ? (
+            <circle className="trend-end proxy-end" cx={proxyLast.x} cy={proxyLast.y} r={4.2} vectorEffect="non-scaling-stroke" />
+          ) : null}
+          {scoreLast ? (
+            <circle className="trend-end score-end" cx={scoreLast.x} cy={scoreLast.y} r={4.2} vectorEffect="non-scaling-stroke" />
+          ) : null}
         </svg>
+        {active ? (
+          <div
+            className={`trend-tooltip ${active.series}-tooltip`}
+            style={{
+              left: `${(active.series === "score" ? scorePts[active.index]?.x : proxyPts[active.index]?.x) ?? 0}%`,
+              top: `${(active.series === "score" ? scorePts[active.index]?.y : proxyPts[active.index]?.y) ?? 0}%`,
+            }}
+          >
+            {formatDate(points[active.index]?.date || "")}
+          </div>
+        ) : null}
       </div>
       <div className="trend-footer">
         <span>{formatDate(points[0]?.date || "")}</span>
