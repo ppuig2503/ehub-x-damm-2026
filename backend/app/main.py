@@ -10,6 +10,8 @@ from .models import (
     CommodityDetail,
     CalaSearchRequest,
     CalaSearchResponse,
+    EvidenceComparisonRequest,
+    EvidenceComparisonResponse,
     OverviewResponse,
     RefreshRequest,
     RefreshResponse,
@@ -109,5 +111,14 @@ async def search_cala(payload: CalaSearchRequest) -> dict:
     service = CalaSearchService()
     try:
         return await service.search(payload.query)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/cala/compare-evidence", response_model=EvidenceComparisonResponse)
+async def compare_evidence(payload: EvidenceComparisonRequest) -> dict:
+    service = CalaSearchService()
+    try:
+        return await service.compare_evidence(payload.model_dump())
     except Exception as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc

@@ -689,10 +689,32 @@ class CalaRefreshService:
 
 
 class CalaSearchService:
-    async def search(self, query: str) -> dict[str, Any]:
+    def _require_api_key(self) -> str:
         api_key = os.getenv("CALA_API_KEY")
         if not api_key:
             raise RuntimeError("CALA_API_KEY not found in process environment.")
+        return api_key
+
+    def _build_evidence_comparison_query(self, payload: dict[str, Any]) -> str:
+        commodity = str(payload["commodity"]).strip()
+        driver = str(payload["driver"]).strip()
+        event = str(payload["event"]).strip()
+        date = str(payload["date"]).strip()
+        region = str(payload["region"]).strip()
+        evidence = str(payload["evidence"]).strip()
+        mechanism = str(payload["mechanism"]).strip()
+        horizon = str(payload["horizon"]).strip()
+
+        return (
+            f"Compare this current {commodity} procurement situation with similar past situations before {date}. "
+            f"Focus on {driver} and similar market regimes in {region}. "
+            f"Current signal: {event}. Evidence: {evidence}. Mechanism: {mechanism}. Horizon: {horizon}. "
+            "Summarize the most similar historical episodes, explain how typical or atypical the current setup is, "
+            "highlight what happened to price or procurement pressure afterwards, and give a concise takeaway for a buyer."
+        )
+
+    async def _run_search(self, query: str) -> dict[str, Any]:
+        api_key = self._require_api_key()
 
         async with httpx.AsyncClient(
             base_url="https://api.cala.ai/v1",
@@ -716,3 +738,97 @@ class CalaSearchService:
             "context": _normalize_text_list(body.get("context")),
             "entities": _normalize_entity_list(body.get("entities")),
         }
+
+    async def search(self, query: str) -> dict[str, Any]:
+        return await self._run_search(query)
+
+    async def compare_evidence(self, payload: dict[str, Any]) -> dict[str, Any]:
+        api_key = self._require_api_key()
+        original_query = self._resolve_signal_query(payload)
+        comparison_query = self._build_past_years_query(original_query, str(payload.get("date", "")).strip())
+
+        async with httpx.AsyncClient(
+            base_url="https://api.cala.ai/v1",
+            timeout=REQUEST_TIMEOUT_SECONDS,
+            headers={"X-API-KEY": api_key},
+        ) as client:
+            response = await client.post(
+                "/knowledge/query",
+                json={"input": comparison_query, "return_entities": False},
+            )
+            response.raise_for_status()
+            body = response.json()
+
+        if not isinstance(body, dict) or "results" not in body:
+            raise RuntimeError(f"Unexpected Cala comparison response shape: {body}")
+
+        matches = self._normalize_comparison_results(
+            commodity=str(payload["commodity"]).strip(),
+            results=body.get("results", []),
+        )
+        return {
+            "query": comparison_query,
+            "count": len(matches),
+            "matches": matches,
+        }
+
+    def _resolve_signal_query(self, payload: dict[str, Any]) -> str:
+        explicit_query = str(payload.get("query") or "").strip()
+        if explicit_query:
+            return explicit_query
+
+        commodity = str(payload["commodity"]).strip()
+        driver = str(payload["driver"]).strip()
+        for spec in CALA_QUERY_MAP.get(commodity, []):
+            if spec["driver"] == driver:
+                return spec["query"]
+        raise RuntimeError(f"No structured Cala query found for commodity={commodity} driver={driver}.")
+
+    def _build_past_years_query(self, query: str, evidence_date: str) -> str:
+        cutoff_year = self._extract_year(evidence_date)
+        if cutoff_year is None:
+            raise RuntimeError(f"Could not extract a year from evidence date `{evidence_date}`.")
+
+        historical_date_clause = f".date<{cutoff_year}"
+        if re.search(r"\.date\s*[<>]=?\s*\d{4}", query):
+            return re.sub(r"\.date\s*[<>]=?\s*\d{4}", historical_date_clause, query, count=1)
+        if ".return(" in query:
+            return query.replace(".return(", f"{historical_date_clause}.return(", 1)
+        return f"{query}{historical_date_clause}"
+
+    def _extract_year(self, value: str) -> int | None:
+        match = re.search(r"\b(20\d{2})\b", value)
+        if match:
+            return int(match.group(1))
+        return None
+
+    def _normalize_comparison_results(
+        self,
+        commodity: str,
+        results: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        matches: list[dict[str, Any]] = []
+        seen_keys: set[str] = set()
+        for row in results[:8]:
+            if not isinstance(row, dict):
+                continue
+            event = _pick_value(row, NAME_KEYS, default=commodity.title())
+            date_text = _pick_value(row, DATE_KEYS, default=datetime.now().date().isoformat())
+            evidence = _pick_value(row, SUMMARY_KEYS)
+            if not evidence:
+                continue
+            key = f"{event}|{date_text}|{evidence}"
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            matches.append(
+                {
+                    "event": event,
+                    "date": _normalize_date(date_text),
+                    "evidence": evidence,
+                    "source_name": f"Cala / {event}",
+                    "source_url": _pick_value(row, URL_KEYS, default="https://docs.cala.ai"),
+                    "source_reference": _pick_value(row, REFERENCE_KEYS, default="") or None,
+                }
+            )
+        return matches

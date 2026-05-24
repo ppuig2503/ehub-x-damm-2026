@@ -1433,6 +1433,71 @@ select:focus {
   gap: 0.8rem;
 }
 
+.evidence-compare {
+  margin-top: 0.25rem;
+}
+
+.compare-button {
+  border: 1px solid rgba(181, 18, 24, 0.18);
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  background: rgba(255, 255, 255, 0.48);
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.compare-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.comparison-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(181, 18, 24, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.comparison-query,
+.comparison-meta {
+  margin: 0;
+  color: var(--muted);
+}
+
+.comparison-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.comparison-item {
+  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+  border: 1px solid rgba(30, 45, 70, 0.1);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.comparison-item p {
+  margin: 0;
+}
+
+.comparison-item p + p {
+  margin-top: 0.45rem;
+}
+
+.comparison-item-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--ink);
+}
+
 .source-row {
   display: flex;
   flex-wrap: wrap;

@@ -19,6 +19,7 @@ export interface Signal {
   evidence: string;
   mechanism: string;
   used_in_score: boolean;
+  query?: string | null;
 }
 
 export interface DriverContribution {
@@ -173,4 +174,31 @@ export interface CalaSearchResponse {
   explainability: string[];
   context: string[];
   entities: string[];
+}
+
+export interface EvidenceComparisonInput {
+  query?: string | null;
+  commodity: string;
+  driver: string;
+  event: string;
+  date: string;
+  region: string;
+  evidence: string;
+  mechanism: string;
+  horizon: string;
+}
+
+export interface EvidenceComparisonMatch {
+  event: string;
+  date: string;
+  evidence: string;
+  source_name: string;
+  source_url: string;
+  source_reference?: string | null;
+}
+
+export interface EvidenceComparisonResponse {
+  query: string;
+  count: number;
+  matches: EvidenceComparisonMatch[];
 }

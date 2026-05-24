@@ -30,6 +30,7 @@ class Signal(BaseModel):
     evidence: str
     mechanism: str
     used_in_score: bool
+    query: str | None = None
 
 
 class DriverContribution(BaseModel):
@@ -172,3 +173,30 @@ class CalaSearchResponse(BaseModel):
     explainability: list[str] = Field(default_factory=list)
     context: list[str] = Field(default_factory=list)
     entities: list[str] = Field(default_factory=list)
+
+
+class EvidenceComparisonRequest(BaseModel):
+    query: str | None = None
+    commodity: str
+    driver: str
+    event: str
+    date: str
+    region: str
+    evidence: str
+    mechanism: str
+    horizon: str
+
+
+class EvidenceComparisonMatch(BaseModel):
+    event: str
+    date: str
+    evidence: str
+    source_name: str
+    source_url: str
+    source_reference: str | None = None
+
+
+class EvidenceComparisonResponse(BaseModel):
+    query: str
+    count: int
+    matches: list[EvidenceComparisonMatch] = Field(default_factory=list)

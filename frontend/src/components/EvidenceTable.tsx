@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Signal } from "@/lib/types";
+import { compareEvidenceWithPast } from "@/lib/api";
 import { formatDate, formatPercent, titleize } from "@/lib/format";
+import { EvidenceComparisonResponse, Signal } from "@/lib/types";
 
 type EvidenceTableProps = {
   signals: Signal[];
@@ -12,6 +13,9 @@ type EvidenceTableProps = {
 export function EvidenceTable({ signals, pageSize = 10 }: EvidenceTableProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(pageSize);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [comparisonResults, setComparisonResults] = useState<Record<string, EvidenceComparisonResponse>>({});
+  const [comparisonErrors, setComparisonErrors] = useState<Record<string, string>>({});
 
   // adjust rowsPerPage to match the visual height of the heatmap-list
   useEffect(() => {
@@ -56,6 +60,40 @@ export function EvidenceTable({ signals, pageSize = 10 }: EvidenceTableProps) {
     setPage(clamped);
   }
 
+  async function handleCompare(signal: Signal) {
+    setLoadingId(signal.id);
+    setComparisonErrors((current) => {
+      const next = { ...current };
+      delete next[signal.id];
+      return next;
+    });
+
+    try {
+      const response = await compareEvidenceWithPast({
+        query: signal.query,
+        commodity: signal.commodity,
+        driver: signal.driver,
+        event: signal.event,
+        date: signal.date,
+        region: signal.region,
+        evidence: signal.evidence,
+        mechanism: signal.mechanism,
+        horizon: signal.horizon,
+      });
+      setComparisonResults((current) => ({
+        ...current,
+        [signal.id]: response,
+      }));
+    } catch (error) {
+      setComparisonErrors((current) => ({
+        ...current,
+        [signal.id]: error instanceof Error ? error.message : "Comparison failed.",
+      }));
+    } finally {
+      setLoadingId((current) => (current === signal.id ? null : current));
+    }
+  }
+
   return (
     <div className="evidence-table">
       <div className="evidence-header" aria-hidden="true">
@@ -72,6 +110,9 @@ export function EvidenceTable({ signals, pageSize = 10 }: EvidenceTableProps) {
         const hasDirectSourceUrl =
           (signal.source_link_status ?? "fallback") === "direct" &&
           signal.source_url !== "https://docs.cala.ai";
+        const comparison = comparisonResults[signal.id];
+        const comparisonError = comparisonErrors[signal.id];
+        const isLoading = loadingId === signal.id;
 
         return (
           <details key={signal.id} className="evidence-row">
@@ -111,6 +152,60 @@ export function EvidenceTable({ signals, pageSize = 10 }: EvidenceTableProps) {
               <p>
                 <strong>Horizon:</strong> {signal.horizon}
               </p>
+              <div className="evidence-compare">
+                <button
+                  type="button"
+                  className="compare-button"
+                  onClick={() => void handleCompare(signal)}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Checking past analogues..." : "Compare with past analogues"}
+                </button>
+              </div>
+              {comparisonError ? (
+                <p className="error-text">{comparisonError}</p>
+              ) : null}
+              {comparison ? (
+                <div className="comparison-card">
+                  <p className="comparison-query">
+                    <strong>Historical Cala query:</strong> {comparison.query}
+                  </p>
+                  <p className="comparison-meta">
+                    <strong>Past matches:</strong> {comparison.count}
+                  </p>
+                  {comparison.matches.length ? (
+                    <div className="comparison-list">
+                      {comparison.matches.map((match, index) => (
+                        <article key={`${signal.id}-${match.date}-${index}`} className="comparison-item">
+                          <p className="comparison-item-head">
+                            <strong>{formatDate(match.date)}</strong> <span>{match.event}</span>
+                          </p>
+                          <p>{match.evidence}</p>
+                          <p className="comparison-meta">
+                            <strong>Source:</strong>{" "}
+                            {match.source_url !== "https://docs.cala.ai" ? (
+                              <a href={match.source_url} target="_blank" rel="noreferrer">
+                                {match.source_name}
+                              </a>
+                            ) : (
+                              <span>{match.source_name}</span>
+                            )}
+                          </p>
+                          {match.source_reference ? (
+                            <p className="comparison-meta">
+                              <strong>Source trace:</strong> {match.source_reference}
+                            </p>
+                          ) : null}
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="comparison-meta">
+                      Cala did not return comparable earlier-year rows for this exact query.
+                    </p>
+                  )}
+                </div>
+              ) : null}
             </div>
           </details>
         );

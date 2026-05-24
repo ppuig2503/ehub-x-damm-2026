@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 
 from backend.app.main import app
+from backend.app.cala_client import CalaSearchService
 
 client = TestClient(app)
 
@@ -56,3 +57,43 @@ def test_scenario_endpoint():
     assert response.status_code == 200
     payload = response.json()
     assert payload["new_risk_score"] >= payload["base_risk_score"]
+
+
+def test_compare_evidence_endpoint(monkeypatch):
+    async def fake_compare_evidence(self, payload):
+        return {
+            "query": "organizations.sector=polyethylene terephthalate.oil.date<2026.return(name, date, summary)",
+            "count": 1,
+            "matches": [
+                {
+                    "event": "PET resin episode",
+                    "date": "2024-05-22",
+                    "evidence": "Mock historical comparison",
+                    "source_name": "Cala / PET resin episode",
+                    "source_url": "https://example.com/mock-source",
+                    "source_reference": "Mock Entity",
+                }
+            ],
+        }
+
+    monkeypatch.setattr(CalaSearchService, "compare_evidence", fake_compare_evidence)
+
+    response = client.post(
+        "/api/v1/cala/compare-evidence",
+        json={
+            "query": "organizations.sector=polyethylene terephthalate.oil.date>2025.return(name, date, summary)",
+            "commodity": "pet",
+            "driver": "oil",
+            "event": "Crude remains range-bound with mild upside bias",
+            "date": "2026-05-22",
+            "region": "Global",
+            "evidence": "Oil markets have not broken out, but the floor is firmer than last month.",
+            "mechanism": "Oil resilience supports PET cost expectations through upstream feedstocks.",
+            "horizon": "2-4 weeks",
+        },
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["query"] == "organizations.sector=polyethylene terephthalate.oil.date<2026.return(name, date, summary)"
+    assert payload["count"] == 1
+    assert payload["matches"][0]["event"] == "PET resin episode"

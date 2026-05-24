@@ -2,6 +2,8 @@ import {
   ActionPlanResponse,
   CalaSearchResponse,
   CommodityDetail,
+  EvidenceComparisonInput,
+  EvidenceComparisonResponse,
   OverviewResponse,
   RefreshResponse,
   ScenarioCatalog,
@@ -109,6 +111,29 @@ export async function searchCala(query: string) {
   }
 
   return response.json() as Promise<CalaSearchResponse>;
+}
+
+export async function compareEvidenceWithPast(input: EvidenceComparisonInput) {
+  const response = await fetch(`${browserApiBaseUrl}/cala/compare-evidence`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  if (!response.ok) {
+    let detail = "Evidence comparison failed.";
+    try {
+      const payload = await response.json() as { detail?: string };
+      if (payload.detail) {
+        detail = payload.detail;
+      }
+    } catch {
+      // Keep generic message when the body is not JSON.
+    }
+    throw new Error(detail);
+  }
+
+  return response.json() as Promise<EvidenceComparisonResponse>;
 }
 
 export function evaluateScenarioServer(input: ScenarioInput) {
