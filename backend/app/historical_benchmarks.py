@@ -54,6 +54,21 @@ BENCHMARK_SPECS: dict[str, dict[str, Any]] = {
         "scale_min": 68.0,
         "scale_max": 128.0,
     },
+    "barley": {
+        "label": "European feed barley benchmark",
+        "value_label": "Benchmark price",
+        "queries": [
+            "French feed barley monthly price history over the last 12 months.return(date, value, source_url)",
+            "European feed barley monthly price history over the last 12 months.return(date, value, source_url)",
+            "Spain barley monthly price history over the last 12 months.return(date, value, source_url)",
+            "barley price_history.date>=2025-01-01.return(date, value, source_url)",
+            "malt barley monthly Europe price history for the last 12 months.return(date, value, source_url)",
+        ],
+        "source_note": "Monthly representative European feed barley benchmark history sourced via Cala.",
+        "fallback_note": "Local fallback history in use until a stable Cala benchmark import is available.",
+        "scale_min": 190.0,
+        "scale_max": 255.0,
+    },
 }
 
 VALUE_KEYS = ("value", "Value", "price", "Price", "benchmark_price", "benchmark")
@@ -138,6 +153,10 @@ def _expand_months(text: str) -> list[str]:
 
 
 def _parse_float(value: str) -> float | None:
+    multiplier = 1.0
+    if "/kg" in value.lower():
+        multiplier = 1000.0
+
     normalized = (
         value.replace("≈", "~")
         .replace("–", "-")
@@ -151,32 +170,94 @@ def _parse_float(value: str) -> float | None:
         parts = [part.strip() for part in normalized.split("-") if part.strip()]
         values = []
         for item in parts[:2]:
-            try:
-                values.append(float(item.replace(",", "")))
-            except ValueError:
-                continue
+            matches = re.findall(r"\d+(?:\.\d+)?", item.replace(",", ""))
+            if matches:
+                values.append(float(matches[0]))
         if len(values) == 2:
             return round(sum(values) / 2, 2)
     cleaned = (
         normalized.replace(",", "")
         .replace("€", "")
+        .replace("C$", "")
         .replace("$", "")
         .replace("EUR", "")
         .replace("USD", "")
+        .replace("CAD", "")
+        .replace("/tonne", "")
         .replace("/t", "")
         .replace("/MWh", "")
+        .replace("/kg", "")
         .replace("/metric ton", "")
         .replace("metric ton", "")
         .replace("¢/lb", "")
         .strip()
     )
-    try:
-        return float(cleaned)
-    except ValueError:
+    matches = re.findall(r"\d+(?:\.\d+)?", cleaned)
+    if not matches:
         return None
+    return float(matches[0]) * multiplier
 
 
-def normalize_cala_history_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _build_dense_month_points(
+    by_month: dict[str, list[float]],
+    source_urls: dict[str, str | None],
+    end_month: str,
+) -> list[dict[str, Any]]:
+    target_months = _month_sequence(end_month)
+    available = {
+        month: round(sum(values) / len(values), 2)
+        for month, values in by_month.items()
+        if month in target_months
+    }
+    if len(available) < 6:
+        return []
+
+    known_indices = [index for index, month in enumerate(target_months) if month in available]
+    points: list[dict[str, Any]] = []
+    for index, month in enumerate(target_months):
+        if month in available:
+            points.append(
+                {
+                    "date": month,
+                    "value": available[month],
+                    "source_url": source_urls.get(month),
+                }
+            )
+            continue
+
+        previous_indices = [known for known in known_indices if known < index]
+        next_indices = [known for known in known_indices if known > index]
+        if previous_indices and next_indices:
+            lower = previous_indices[-1]
+            upper = next_indices[0]
+            lower_value = available[target_months[lower]]
+            upper_value = available[target_months[upper]]
+            ratio = (index - lower) / (upper - lower)
+            value = lower_value + (upper_value - lower_value) * ratio
+            source_url = source_urls.get(target_months[lower]) or source_urls.get(target_months[upper])
+        elif previous_indices:
+            lower = previous_indices[-1]
+            value = available[target_months[lower]]
+            source_url = source_urls.get(target_months[lower])
+        elif next_indices:
+            upper = next_indices[0]
+            value = available[target_months[upper]]
+            source_url = source_urls.get(target_months[upper])
+        else:
+            return []
+
+        points.append(
+            {
+                "date": month,
+                "value": round(value, 2),
+                "source_url": source_url,
+            }
+        )
+
+    return points
+
+
+def normalize_cala_history_rows(rows: list[dict[str, Any]], end_month: str | None = None) -> list[dict[str, Any]]:
     by_month: dict[str, list[float]] = {}
     source_urls: dict[str, str | None] = {}
     for row in rows:
@@ -192,6 +273,8 @@ def normalize_cala_history_rows(rows: list[dict[str, Any]]) -> list[dict[str, An
 
     months = sorted(by_month.keys())
     if len(months) < HISTORY_POINT_COUNT - 1:
+        if end_month:
+            return _build_dense_month_points(by_month, source_urls, end_month)
         return []
     selected = months[-HISTORY_POINT_COUNT:]
     points = [
@@ -294,7 +377,7 @@ def fetch_history_entry(
             response.raise_for_status()
             body = response.json()
             rows = body.get("results", []) if isinstance(body, dict) else []
-            points = normalize_cala_history_rows(rows)
+            points = normalize_cala_history_rows(rows, end_month=end_month)
             diagnostics.append(
                 {
                     "query": query,

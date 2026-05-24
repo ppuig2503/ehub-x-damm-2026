@@ -9,20 +9,10 @@ type MiniSparklineProps = {
   dates?: string[];
 };
 
+const SPARKLINE_X_PADDING = 4;
+const SPARKLINE_Y_PADDING = 8;
+
 export function MiniSparkline({ values, dates }: MiniSparklineProps) {
-  if (!values.length) {
-    return null;
-  }
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-  const pts = values.map((value, index) => {
-    const x = (index / (values.length - 1 || 1)) * 100;
-    const y = 100 - ((value - min) / range) * 100;
-    return { x, y };
-  });
-
   const normalizedDates = useMemo(() => {
     if (!dates?.length) return null;
     if (dates.length === values.length) return dates;
@@ -30,6 +20,21 @@ export function MiniSparkline({ values, dates }: MiniSparklineProps) {
   }, [dates, values.length]);
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  if (!values.length) {
+    return null;
+  }
+
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const innerWidth = 100 - SPARKLINE_X_PADDING * 2;
+  const innerHeight = 100 - SPARKLINE_Y_PADDING * 2;
+  const pts = values.map((value, index) => {
+    const x = SPARKLINE_X_PADDING + (index / (values.length - 1 || 1)) * innerWidth;
+    const y = 100 - SPARKLINE_Y_PADDING - ((value - min) / range) * innerHeight;
+    return { x, y };
+  });
 
   function catmullRom2bezier(points: { x: number; y: number }[]) {
     if (points.length === 1) return `M ${points[0].x},${points[0].y}`;
@@ -51,7 +56,7 @@ export function MiniSparkline({ values, dates }: MiniSparklineProps) {
   }
 
   const pathD = catmullRom2bezier(pts);
-  const areaD = `${pathD} L 100,100 L 0,100 Z`;
+  const areaD = `${pathD} L ${100 - SPARKLINE_X_PADDING},${100 - SPARKLINE_Y_PADDING} L ${SPARKLINE_X_PADDING},${100 - SPARKLINE_Y_PADDING} Z`;
   const lastPoint = pts[pts.length - 1];
 
   const activePoint = activeIndex !== null ? pts[activeIndex] : null;

@@ -6,7 +6,7 @@ import uvicorn
 
 
 def main() -> None:
-    port = int(os.getenv("SMARTBUY_API_PORT", "8002"))
+    port = int(os.getenv("SMARTBUY_API_PORT", "8003"))
     reload_enabled = os.getenv("SMARTBUY_API_RELOAD", "1") != "0"
     uvicorn.run(
         "backend.app.main:app",

@@ -647,6 +647,7 @@ h1, h2, h3, h4, h5, h6,
 .sparkline {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
 .sparkline-wrap {
@@ -1084,6 +1085,7 @@ h1, h2, h3, h4, h5, h6,
 .trend-chart svg {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
 .trend-area {

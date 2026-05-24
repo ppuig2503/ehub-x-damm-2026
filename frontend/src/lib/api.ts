@@ -10,7 +10,7 @@ import {
   SignalsResponse,
 } from "@/lib/types";
 
-const DEFAULT_API_BASE_URL = "http://127.0.0.1:8002/api/v1";
+const DEFAULT_API_BASE_URL = "http://127.0.0.1:8003/api/v1";
 
 function getApiBaseUrl() {
   return (

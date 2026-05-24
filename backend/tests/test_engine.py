@@ -33,8 +33,8 @@ def test_overview_carries_history_metadata():
 
     assert aluminium["history_source"] in {"cala_benchmark", "local_fallback"}
     assert len(aluminium["benchmark_history"]) == 12
-    assert barley["history_source"] == "barley_csv"
-    assert barley["benchmark_history"] is None
+    assert barley["history_source"] in {"cala_benchmark", "local_fallback"}
+    assert len(barley["benchmark_history"]) == 12
 
 
 def test_scenario_evaluation_changes_score():

@@ -4,9 +4,7 @@ import json
 import math
 from datetime import date, timedelta
 
-from backend.app.barley import build_barley_feature_payload
 from backend.app.config import (
-    BARLEY_CSV_PATH,
     COMMODITIES_SEED_PATH,
     DEFAULT_GENERATED_AT,
     REFRESH_LOG_PATH,
@@ -28,7 +26,6 @@ def build_proxy_series(start: date, base: float, drift: float, amplitude: float)
 
 def build_seed_commodities() -> dict[str, object]:
     start = date(2026, 2, 1)
-    barley_payload = build_barley_feature_payload(str(BARLEY_CSV_PATH))
 
     commodities = [
         {
@@ -64,14 +61,12 @@ def build_seed_commodities() -> dict[str, object]:
         {
             "id": "barley",
             "region": "Iberia",
-            "proxy_label": "Barley market indicator",
-            "proxy_value_label": "Weekly market indicator",
-            "proxy_score": 56,
-            "volatility_index": 13,
-            "proxy_series": barley_payload["series"],
+            "proxy_label": "Agricultural pressure index",
+            "proxy_value_label": "Agricultural pressure index",
+            "proxy_score": 54,
+            "volatility_index": 12,
+            "proxy_series": build_proxy_series(start, 49, 0.35, 2.8),
             "previous_snapshot": {"risk_score": 52, "recommended_action": "monitor"},
-            "barley_features": barley_payload["latest_features"],
-            "barley_stats": barley_payload["stats"],
         },
     ]
     return {
@@ -525,4 +520,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

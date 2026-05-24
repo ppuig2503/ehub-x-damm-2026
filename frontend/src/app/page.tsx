@@ -55,7 +55,7 @@ export default async function HomePage() {
 
       <section className="card-grid">
         {overview.commodities.map((commodity) => (
-          <CommodityCard key={commodity.id} commodity={commodity} />
+          <CommodityCard key={commodity.id} commodity={commodity} generatedAt={overview.generated_at} />
         ))}
       </section>
 

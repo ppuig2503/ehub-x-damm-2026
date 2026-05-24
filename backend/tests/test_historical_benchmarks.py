@@ -19,10 +19,10 @@ def test_normalize_cala_history_rows_returns_last_twelve_months():
     assert points[-1]["date"] == "2025-12-01"
 
 
-def test_seed_history_payload_uses_fallback_series_for_non_barley():
+def test_seed_history_payload_uses_fallback_series_for_all_commodities():
     payload = build_seed_history_payload(load_commodities_payload(), "2026-05-01")
 
-    assert len(payload["series"]) == 3
-    assert {item["commodity"] for item in payload["series"]} == {"aluminium", "pet", "energy"}
+    assert len(payload["series"]) == 4
+    assert {item["commodity"] for item in payload["series"]} == {"aluminium", "pet", "energy", "barley"}
     assert all(item["series_type"] == "local_fallback" for item in payload["series"])
     assert all(len(item["points"]) == HISTORY_POINT_COUNT for item in payload["series"])

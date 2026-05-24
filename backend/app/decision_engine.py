@@ -56,7 +56,6 @@ class SmartBuyEngine:
         commodity: dict[str, Any],
         current_risk_score: float,
         external_score: float,
-        quantitative_score: float | None = None,
     ) -> list[dict[str, Any]]:
         chart_series = commodity.get("history_series", commodity["proxy_series"])
         values = [point["value"] for point in chart_series]
@@ -65,10 +64,7 @@ class SmartBuyEngine:
         trend: list[dict[str, Any]] = []
         for point in chart_series:
             proxy_normalized = 50 + ((point["value"] - base_mean) / base_std) * 10
-            if quantitative_score is not None:
-                score = clamp((proxy_normalized * 0.6) + (external_score * 0.4), 0, 100)
-            else:
-                score = clamp((proxy_normalized * 0.35) + (external_score * 0.65), 0, 100)
+            score = clamp((proxy_normalized * 0.35) + (external_score * 0.65), 0, 100)
             trend.append(
                 {
                     "date": point["date"],
@@ -179,23 +175,11 @@ class SmartBuyEngine:
         external_signal_score = clamp(50 + sum(driver_totals.values()), 0, 100)
         proxy_score = float(commodity["proxy_score"])
         volatility_component = float(commodity.get("volatility_index", 12)) / 25
-
-        barley_features = commodity.get("barley_features")
-        quantitative_score = None
-        if barley_features:
-            quantitative_score = float(barley_features["barley_quantitative_score"])
-            risk_score = clamp(
-                (external_signal_score * 0.5) + (quantitative_score * 0.5),
-                0,
-                100,
-            )
-            volatility_component = float(barley_features["barley_volatility_12w"]) / 20
-        else:
-            risk_score = clamp(
-                (external_signal_score * 0.7) + (proxy_score * 0.3),
-                0,
-                100,
-            )
+        risk_score = clamp(
+            (external_signal_score * 0.7) + (proxy_score * 0.3),
+            0,
+            100,
+        )
 
         bullish_count = len(bullish_confidences)
         bearish_count = len(bearish_confidences)
@@ -263,7 +247,6 @@ class SmartBuyEngine:
             commodity,
             current_risk_score=risk_score,
             external_score=external_signal_score,
-            quantitative_score=quantitative_score,
         )
 
         history_slice = trend[-12:] if trend else []
@@ -293,7 +276,7 @@ class SmartBuyEngine:
             "score_history": [point["score"] for point in trend[-12:]],
             "benchmark_history": (
                 [point["value"] for point in trend[-12:]]
-                if commodity.get("history_source") != "barley_csv"
+                if trend
                 else None
             ),
             "history_source": commodity.get("history_source", "local_fallback"),
@@ -327,7 +310,6 @@ class SmartBuyEngine:
             "history_note": commodity.get("history_note"),
             "signals": signals,
             "refresh_status": self.refresh_status,
-            "barley_features": barley_features,
             "what_changed": change_note,
         }
         return CommodityComputation(overview=overview, detail=detail)
@@ -384,7 +366,7 @@ class SmartBuyEngine:
             "Inventory drawdown beyond 15%",
             "New trade restriction or tariff signal",
             "Proxy volatility breaks recent range",
-            "Barley market indicator shifts more than 5% in 4 weeks",
+            "Barley benchmark moves materially versus the recent monthly range",
         ]
         return {
             "generated_at": self.generated_at,

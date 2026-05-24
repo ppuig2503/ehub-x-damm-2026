@@ -6,7 +6,7 @@ import { DriverBreakdown } from "@/components/DriverBreakdown";
 import { EvidenceTable } from "@/components/EvidenceTable";
 import { ForcesPanel } from "@/components/ForcesPanel";
 import { TrendChart } from "@/components/TrendChart";
-import { actionLabel, formatPercent, titleize } from "@/lib/format";
+import { actionLabel, formatPercent } from "@/lib/format";
 import { getCommodityDetail, getOverview } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -80,9 +80,7 @@ export default async function CommodityDetailPage({ params }: CommodityDetailPag
           <p>{detail.recommendation.explanation}</p>
           <div className="detail-kpis">
             <div>
-              <span className="metric-label">
-                {detail.history_source === "barley_csv" ? "Latest indicator" : "Latest benchmark"}
-              </span>
+              <span className="metric-label">Latest benchmark</span>
               <strong>{detail.latest_history_value}</strong>
               <small>{detail.history_value_label}</small>
             </div>
@@ -98,16 +96,6 @@ export default async function CommodityDetailPage({ params }: CommodityDetailPag
             </div>
           </div>
           <p className="small-muted">{detail.what_changed}</p>
-          {detail.barley_features ? (
-            <div className="barley-box">
-              <h4>Barley dataset layer</h4>
-              <p>
-                `y` is treated as a market indicator proxy. Latest 12-week momentum:{" "}
-                <strong>{detail.barley_features.barley_momentum_12w}%</strong>. Recent trend:{" "}
-                <strong>{titleize(String(detail.barley_features.barley_recent_trend))}</strong>.
-              </p>
-            </div>
-          ) : null}
         </section>
       </div>
 

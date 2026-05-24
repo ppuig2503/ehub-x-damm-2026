@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T06:10:29+02:00",
+  "generated_at": "2026-05-24T08:55:39+02:00",
   "source": "cala_live_attempt",
   "series": [
     {
@@ -175,16 +175,6 @@
       ],
       "points": [
         {
-          "date": "2025-03-01",
-          "value": 90.0,
-          "source_url": null
-        },
-        {
-          "date": "2025-04-01",
-          "value": 77.5,
-          "source_url": null
-        },
-        {
           "date": "2025-05-01",
           "value": 82.5,
           "source_url": null
@@ -230,9 +220,97 @@
           "source_url": null
         },
         {
+          "date": "2026-02-01",
+          "value": 80.0,
+          "source_url": null
+        },
+        {
+          "date": "2026-03-01",
+          "value": 80.0,
+          "source_url": null
+        },
+        {
           "date": "2026-04-01",
           "value": 102.5,
           "source_url": null
+        }
+      ]
+    },
+    {
+      "commodity": "barley",
+      "series_type": "cala_benchmark",
+      "label": "European feed barley benchmark",
+      "value_label": "Benchmark price",
+      "source_note": "Monthly representative European feed barley benchmark history sourced via Cala.",
+      "query": "French feed barley monthly price history over the last 12 months.return(date, value, source_url)",
+      "diagnostics": [
+        {
+          "query": "French feed barley monthly price history over the last 12 months.return(date, value, source_url)",
+          "status": "ok",
+          "rows": 12,
+          "normalized_points": 12
+        }
+      ],
+      "points": [
+        {
+          "date": "2025-06-01",
+          "value": 177.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 180.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 182.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 187.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 192.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 197.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 197.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 201.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 192.0,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 197.5,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 205.0,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 205.0,
+          "source_url": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
         }
       ]
     }

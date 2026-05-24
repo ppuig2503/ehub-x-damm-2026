@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { actionLabel, formatMonthYear, formatPercent, riskTone, titleize } from "@/lib/format";
 import { CommodityOverview } from "@/lib/types";
@@ -9,19 +9,39 @@ import { MiniSparkline } from "@/components/MiniSparkline";
 
 type CommodityCardProps = {
   commodity: CommodityOverview;
+  generatedAt: string;
 };
 
-export function CommodityCard({ commodity }: CommodityCardProps) {
+function buildMonthlyDates(endIso: string, count: number) {
+  const end = new Date(endIso);
+  end.setDate(1);
+  const dates: string[] = [];
+  for (let offset = count - 1; offset >= 0; offset -= 1) {
+    const value = new Date(end.getFullYear(), end.getMonth() - offset, 1);
+    dates.push(value.toISOString());
+  }
+  return dates;
+}
+
+export function CommodityCard({ commodity, generatedAt }: CommodityCardProps) {
   const tone = riskTone(commodity.risk_score);
-  const canToggleBenchmark = commodity.history_source !== "barley_csv" && Boolean(commodity.benchmark_history?.length);
+  const canToggleBenchmark = Boolean(commodity.benchmark_history?.length);
   const [viewMode, setViewMode] = useState<"score" | "benchmark">("score");
   const sparklineValues =
     canToggleBenchmark && viewMode === "benchmark"
       ? commodity.benchmark_history ?? commodity.score_history
       : commodity.score_history;
 
-  const historyStart = commodity.history_start;
-  const historyEnd = commodity.history_end;
+  const fallbackHistoryDates = useMemo(
+    () => buildMonthlyDates(generatedAt, sparklineValues.length),
+    [generatedAt, sparklineValues.length],
+  );
+  const sparklineDates =
+    commodity.history_dates?.length === sparklineValues.length
+      ? commodity.history_dates
+      : fallbackHistoryDates;
+  const historyStart = sparklineDates[0] ?? commodity.history_start;
+  const historyEnd = sparklineDates[sparklineDates.length - 1] ?? commodity.history_end;
 
   return (
     <Link
@@ -92,7 +112,7 @@ export function CommodityCard({ commodity }: CommodityCardProps) {
         <div className="sparkline-block">
           <MiniSparkline
             values={sparklineValues}
-            dates={commodity.history_dates ?? undefined}
+            dates={sparklineDates}
           />
           {historyStart && historyEnd ? (
             <div className="sparkline-axis" aria-hidden="true">
@@ -102,9 +122,6 @@ export function CommodityCard({ commodity }: CommodityCardProps) {
           ) : null}
         </div>
       </div>
-
-      <p className="supporting-copy">{commodity.explanation}</p>
-
       <div className="change-row">
         <span className={commodity.changed ? "delta-badge changed" : "delta-badge"}>
           {commodity.changed ? "Changed since last update" : "Stable versus last update"}

@@ -1,24 +1,29 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { TrendPoint } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 
 type TrendChartProps = {
   points: TrendPoint[];
   historyLabel: string;
-  historySource: "cala_benchmark" | "local_fallback" | "barley_csv";
+  historySource: "cala_benchmark" | "local_fallback";
   historyNote?: string | null;
 };
+
+const TREND_X_PADDING = 4;
+const TREND_Y_PADDING = 8;
 
 function buildPoints(values: number[]) {
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max - min || 1;
+  const innerWidth = 100 - TREND_X_PADDING * 2;
+  const innerHeight = 100 - TREND_Y_PADDING * 2;
 
   return values.map((value, index) => {
-    const x = (index / (values.length - 1 || 1)) * 100;
-    const y = 100 - ((value - min) / range) * 100;
+    const x = TREND_X_PADDING + (index / (values.length - 1 || 1)) * innerWidth;
+    const y = 100 - TREND_Y_PADDING - ((value - min) / range) * innerHeight;
     return { x, y };
   });
 }
@@ -51,8 +56,8 @@ export function TrendChart({ points, historyLabel, historySource, historyNote }:
   const proxyPts = buildPoints(proxyValues);
   const scorePath = catmullRom2bezier(scorePts);
   const proxyPath = catmullRom2bezier(proxyPts);
-  const scoreArea = `${scorePath} L 100,100 L 0,100 Z`;
-  const proxyArea = `${proxyPath} L 100,100 L 0,100 Z`;
+  const scoreArea = `${scorePath} L ${100 - TREND_X_PADDING},${100 - TREND_Y_PADDING} L ${TREND_X_PADDING},${100 - TREND_Y_PADDING} Z`;
+  const proxyArea = `${proxyPath} L ${100 - TREND_X_PADDING},${100 - TREND_Y_PADDING} L ${TREND_X_PADDING},${100 - TREND_Y_PADDING} Z`;
   const scoreLast = scorePts[scorePts.length - 1];
   const proxyLast = proxyPts[proxyPts.length - 1];
 

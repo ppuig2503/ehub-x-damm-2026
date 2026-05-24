@@ -103,7 +103,7 @@ export default async function EvidencePage({ searchParams }: EvidencePageProps) 
           </label>
           <label className="field">
             <span>Minimum impact</span>
-            <input key={`minimpact-${minImpact || "none"}`} type="number" min="0" max="1" step="0.05" name="min_impact" defaultValue={minImpact || ""} />
+            <input key={`minimpact-${minImpact || "none"}`} type="number" min="0" max="1" step="0.05" name="min_impact" defaultValue={minImpact || ""} placeholder="0.00 to 1.00" />
           </label>
           <button type="submit" className="action-button">
             Apply filters

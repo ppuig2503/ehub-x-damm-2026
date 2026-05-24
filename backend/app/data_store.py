@@ -52,41 +52,29 @@ def load_commodities_payload() -> dict[str, Any]:
     merged_commodities: list[dict[str, Any]] = []
     for commodity in payload["commodities"]:
         merged = dict(commodity)
-        if commodity["id"] == "barley":
+        history = history_by_commodity.get(commodity["id"])
+        if history:
             merged.update(
                 {
-                    "history_source": "barley_csv",
+                    "history_source": history.get("series_type", "local_fallback"),
+                    "history_label": history.get("label", commodity["proxy_label"]),
+                    "history_value_label": history.get("value_label", "Benchmark value"),
+                    "history_note": history.get("source_note"),
+                    "history_series": history.get("points", commodity["proxy_series"]),
+                    "history_query": history.get("query"),
+                }
+            )
+        else:
+            merged.update(
+                {
+                    "history_source": "local_fallback",
                     "history_label": commodity["proxy_label"],
                     "history_value_label": commodity["proxy_value_label"],
-                    "history_note": None,
+                    "history_note": "Local fallback history in use until Cala benchmark seed data is generated.",
                     "history_series": commodity["proxy_series"],
                     "history_query": None,
                 }
             )
-        else:
-            history = history_by_commodity.get(commodity["id"])
-            if history:
-                merged.update(
-                    {
-                        "history_source": history.get("series_type", "local_fallback"),
-                        "history_label": history.get("label", commodity["proxy_label"]),
-                        "history_value_label": history.get("value_label", "Benchmark value"),
-                        "history_note": history.get("source_note"),
-                        "history_series": history.get("points", commodity["proxy_series"]),
-                        "history_query": history.get("query"),
-                    }
-                )
-            else:
-                merged.update(
-                    {
-                        "history_source": "local_fallback",
-                        "history_label": commodity["proxy_label"],
-                        "history_value_label": commodity["proxy_value_label"],
-                        "history_note": "Local fallback history in use until Cala benchmark seed data is generated.",
-                        "history_series": commodity["proxy_series"],
-                        "history_query": None,
-                    }
-                )
         merged_commodities.append(merged)
 
     return {
