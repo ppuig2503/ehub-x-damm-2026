@@ -26,6 +26,17 @@ def test_risk_order_matches_demo_story():
     assert "barley" in ordered_ids
 
 
+def test_overview_carries_history_metadata():
+    payload = build_engine().overview_payload()
+    aluminium = next(item for item in payload["commodities"] if item["id"] == "aluminium")
+    barley = next(item for item in payload["commodities"] if item["id"] == "barley")
+
+    assert aluminium["history_source"] in {"cala_benchmark", "local_fallback"}
+    assert len(aluminium["benchmark_history"]) == 12
+    assert barley["history_source"] == "barley_csv"
+    assert barley["benchmark_history"] is None
+
+
 def test_scenario_evaluation_changes_score():
     engine = build_engine()
     result = engine.scenario_payload(
@@ -43,4 +54,3 @@ def test_scenario_evaluation_changes_score():
     )
     assert result["new_risk_score"] > result["base_risk_score"]
     assert result["recommendation"]["recommended_action"] in {"buy", "hedge", "monitor", "wait"}
-

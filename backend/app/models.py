@@ -62,6 +62,10 @@ class CommodityOverview(BaseModel):
     refresh_status: Literal["seed", "fallback", "live"]
     proxy_label: str
     score_history: list[float]
+    benchmark_history: list[float] | None = None
+    history_source: Literal["cala_benchmark", "local_fallback", "barley_csv"]
+    history_label: str
+    history_note: str | None = None
     explanation: str
 
 
@@ -80,6 +84,11 @@ class CommodityDetail(BaseModel):
     proxy_label: str
     proxy_value_label: str
     latest_proxy_value: float
+    history_source: Literal["cala_benchmark", "local_fallback", "barley_csv"]
+    history_label: str
+    history_value_label: str
+    latest_history_value: float
+    history_note: str | None = None
     signals: list[Signal]
     refresh_status: Literal["seed", "fallback", "live"]
     barley_features: dict[str, float | int | str] | None = None

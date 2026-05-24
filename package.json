@@ -2,9 +2,9 @@
   "name": "smartbuy-signal-os",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm --prefix frontend run dev\" \"python -m uvicorn backend.app.main:app --reload --port 8000\"",
+    "dev": "concurrently \"npm --prefix frontend run dev\" \"python -m uvicorn backend.app.main:app --reload --port 8002\"",
     "dev:web": "npm --prefix frontend run dev",
-    "dev:api": "python -m uvicorn backend.app.main:app --reload --port 8000",
+    "dev:api": "python -m uvicorn backend.app.main:app --reload --port 8002",
     "build:web": "npm --prefix frontend run build",
     "lint:web": "npm --prefix frontend run lint",
     "seed": "python -m backend.scripts.build_seed_data",

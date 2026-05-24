@@ -1,0 +1,240 @@
+{
+  "generated_at": "2026-05-24T06:10:29+02:00",
+  "source": "cala_live_attempt",
+  "series": [
+    {
+      "commodity": "aluminium",
+      "series_type": "cala_benchmark",
+      "label": "European aluminium benchmark",
+      "value_label": "Benchmark price",
+      "source_note": "Monthly representative aluminium benchmark history sourced via Cala.",
+      "query": "organizations.sector=aluminium.monthly benchmark price history for Europe over the last 12 months.return(date, value, source_url)",
+      "diagnostics": [
+        {
+          "query": "organizations.sector=aluminium.monthly benchmark price history for Europe over the last 12 months.return(date, value, source_url)",
+          "status": "ok",
+          "rows": 12,
+          "normalized_points": 12
+        }
+      ],
+      "points": [
+        {
+          "date": "2025-06-01",
+          "value": 2515.8,
+          "source_url": "https://www.insee.fr/langue/en?url=%2Fen%2Fstatistiques%2Fserie%2F010002041"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2603.4,
+          "source_url": "https://www.insee.fr/langue/en?url=%2Fen%2Fstatistiques%2Fserie%2F010002041"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 2593.2,
+          "source_url": "https://www.insee.fr/langue/en?url=%2Fen%2Fstatistiques%2Fserie%2F010002041"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 2652.6,
+          "source_url": "https://www.insee.fr/langue/en?url=%2Fen%2Fstatistiques%2Fserie%2F010002041"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 2785.5,
+          "source_url": "https://www.insee.fr/langue/en?url=%2Fen%2Fstatistiques%2Fserie%2F010002041"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2822.2,
+          "source_url": "https://www.insee.fr/langue/en?url=%2Fen%2Fstatistiques%2Fserie%2F010002041"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 2874.8,
+          "source_url": "https://www.insee.fr/langue/en?url=%2Fen%2Fstatistiques%2Fserie%2F010002041"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 2690.0,
+          "source_url": "https://metalcolor.ch/lme"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2610.0,
+          "source_url": "https://metalcolor.ch/lme"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 2890.0,
+          "source_url": "https://metalcolor.ch/lme"
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3000.0,
+          "source_url": "https://metalcolor.ch/lme"
+        },
+        {
+          "date": "2026-05-01",
+          "value": 3000.0,
+          "source_url": "https://metalcolor.ch/lme"
+        }
+      ]
+    },
+    {
+      "commodity": "pet",
+      "series_type": "cala_benchmark",
+      "label": "Europe PET resin benchmark",
+      "value_label": "Benchmark price",
+      "source_note": "Monthly representative PET resin benchmark history sourced via Cala.",
+      "query": "Europe bottle-grade PET monthly spot price history over the last 12 months.return(date, value, source_url)",
+      "diagnostics": [
+        {
+          "query": "Europe bottle-grade PET monthly spot price history over the last 12 months.return(date, value, source_url)",
+          "status": "ok",
+          "rows": 9,
+          "normalized_points": 12
+        }
+      ],
+      "points": [
+        {
+          "date": "2025-04-01",
+          "value": 1105.0,
+          "source_url": "https://www.price-watch.ai/polyethylene-terephthalate-prices"
+        },
+        {
+          "date": "2025-05-01",
+          "value": 1105.0,
+          "source_url": "https://www.price-watch.ai/polyethylene-terephthalate-prices"
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1105.0,
+          "source_url": "https://www.price-watch.ai/polyethylene-terephthalate-prices"
+        },
+        {
+          "date": "2025-07-01",
+          "value": 980.0,
+          "source_url": "https://www.chemanalyst.com/Pricing-data/polyethylene-terephthalate-72"
+        },
+        {
+          "date": "2025-08-01",
+          "value": 980.0,
+          "source_url": "https://www.chemanalyst.com/Pricing-data/polyethylene-terephthalate-72"
+        },
+        {
+          "date": "2025-09-01",
+          "value": 980.0,
+          "source_url": "https://www.chemanalyst.com/Pricing-data/polyethylene-terephthalate-72"
+        },
+        {
+          "date": "2025-10-01",
+          "value": 1065.0,
+          "source_url": "https://www.polyestertime.com/?p=129757"
+        },
+        {
+          "date": "2025-11-01",
+          "value": 1065.0,
+          "source_url": "https://www.polyestertime.com/?p=129757"
+        },
+        {
+          "date": "2025-12-01",
+          "value": 1065.0,
+          "source_url": "https://www.polyestertime.com/?p=129757"
+        },
+        {
+          "date": "2026-01-01",
+          "value": 1175.0,
+          "source_url": "https://www.polyestertime.com/?p=129757"
+        },
+        {
+          "date": "2026-02-01",
+          "value": 1175.0,
+          "source_url": "https://www.polyestertime.com/?p=129757"
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1305.0,
+          "source_url": "https://www.polyestertime.com/?p=131451"
+        }
+      ]
+    },
+    {
+      "commodity": "energy",
+      "series_type": "cala_benchmark",
+      "label": "EU power benchmark",
+      "value_label": "Benchmark price",
+      "source_note": "Monthly representative EU power benchmark history sourced via Cala.",
+      "query": "European wholesale power monthly benchmark price history over the last 18 months.return(date, value, source_url)",
+      "diagnostics": [
+        {
+          "query": "European wholesale power monthly benchmark price history over the last 18 months.return(date, value, source_url)",
+          "status": "ok",
+          "rows": 18,
+          "normalized_points": 12
+        }
+      ],
+      "points": [
+        {
+          "date": "2025-03-01",
+          "value": 90.0,
+          "source_url": null
+        },
+        {
+          "date": "2025-04-01",
+          "value": 77.5,
+          "source_url": null
+        },
+        {
+          "date": "2025-05-01",
+          "value": 82.5,
+          "source_url": null
+        },
+        {
+          "date": "2025-06-01",
+          "value": 80.0,
+          "source_url": null
+        },
+        {
+          "date": "2025-07-01",
+          "value": 100.0,
+          "source_url": null
+        },
+        {
+          "date": "2025-08-01",
+          "value": 89.5,
+          "source_url": null
+        },
+        {
+          "date": "2025-09-01",
+          "value": 84.0,
+          "source_url": null
+        },
+        {
+          "date": "2025-10-01",
+          "value": 97.5,
+          "source_url": null
+        },
+        {
+          "date": "2025-11-01",
+          "value": 109.5,
+          "source_url": null
+        },
+        {
+          "date": "2025-12-01",
+          "value": 110.0,
+          "source_url": null
+        },
+        {
+          "date": "2026-01-01",
+          "value": 119.5,
+          "source_url": null
+        },
+        {
+          "date": "2026-04-01",
+          "value": 102.5,
+          "source_url": null
+        }
+      ]
+    }
+  ]
+}

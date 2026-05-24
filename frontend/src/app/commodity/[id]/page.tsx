@@ -64,7 +64,12 @@ export default async function CommodityDetailPage({ params }: CommodityDetailPag
       </nav>
 
       <div className="detail-layout">
-        <TrendChart points={detail.trend} proxyLabel={detail.proxy_label} />
+        <TrendChart
+          points={detail.trend}
+          historyLabel={detail.history_label}
+          historySource={detail.history_source}
+          historyNote={detail.history_note}
+        />
         <section className="panel">
           <div className="panel-heading">
             <div>
@@ -75,9 +80,11 @@ export default async function CommodityDetailPage({ params }: CommodityDetailPag
           <p>{detail.recommendation.explanation}</p>
           <div className="detail-kpis">
             <div>
-              <span className="metric-label">Latest proxy</span>
-              <strong>{detail.latest_proxy_value}</strong>
-              <small>{detail.proxy_value_label}</small>
+              <span className="metric-label">
+                {detail.history_source === "barley_csv" ? "Latest indicator" : "Latest benchmark"}
+              </span>
+              <strong>{detail.latest_history_value}</strong>
+              <small>{detail.history_value_label}</small>
             </div>
             <div>
               <span className="metric-label">Risk score</span>

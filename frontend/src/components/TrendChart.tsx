@@ -3,7 +3,9 @@ import { formatDate } from "@/lib/format";
 
 type TrendChartProps = {
   points: TrendPoint[];
-  proxyLabel: string;
+  historyLabel: string;
+  historySource: "cala_benchmark" | "local_fallback" | "barley_csv";
+  historyNote?: string | null;
 };
 
 function buildPoints(values: number[]) {
@@ -38,7 +40,7 @@ function catmullRom2bezier(points: { x: number; y: number }[]) {
   return d;
 }
 
-export function TrendChart({ points, proxyLabel }: TrendChartProps) {
+export function TrendChart({ points, historyLabel, historySource, historyNote }: TrendChartProps) {
   const scoreValues = points.map((point) => point.score ?? 0);
   const proxyValues = points.map((point) => point.value);
 
@@ -47,7 +49,7 @@ export function TrendChart({ points, proxyLabel }: TrendChartProps) {
       <div className="panel-heading">
         <div>
           <span className="eyebrow">Price & risk trend</span>
-          <h3>Signal score against market proxy</h3>
+          <h3>Signal score against market benchmark</h3>
         </div>
         <div className="legend">
           <span className="legend-item">
@@ -56,10 +58,13 @@ export function TrendChart({ points, proxyLabel }: TrendChartProps) {
           </span>
           <span className="legend-item">
             <span className="legend-swatch proxy-line" />
-            {proxyLabel}
+            {historyLabel}
           </span>
         </div>
       </div>
+      {historySource === "local_fallback" && historyNote ? (
+        <p className="history-fallback-note">{historyNote}</p>
+      ) : null}
       <div className="trend-chart">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
             <path
