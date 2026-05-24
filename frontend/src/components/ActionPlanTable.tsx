@@ -24,7 +24,9 @@ export function ActionPlanTable({ priorities }: ActionPlanTableProps) {
           <span>
             <Link href={`/commodity/${item.id}`}>{item.name}</Link>
           </span>
-          <span>{actionLabel(item.recommended_action)}</span>
+          <span>
+            <span className={`status-pill action-${item.recommended_action}`}>{actionLabel(item.recommended_action)}</span>
+          </span>
           <span>{item.suggested_coverage}</span>
           <span>{item.suggested_horizon}</span>
           <span>{formatPercent(item.confidence)}</span>
