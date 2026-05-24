@@ -117,7 +117,9 @@ export function ScenarioLab({ overview, catalog, initialResult }: ScenarioLabPro
             <label className="field">
               <span>Commodity</span>
               <select
-                value={selectedCommodity}
+                className="commodity-select"
+                key={selectedCommodity}
+                defaultValue={selectedCommodity}
                 onChange={(event) => handleCommodityChange(event.target.value)}
               >
                 {overview.map((item) => (

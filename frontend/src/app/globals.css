@@ -334,6 +334,12 @@ h1, h2, h3, h4, h5, h6,
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+/* Neutral metric title styling */
+.hero-panel .metric-title.neutral,
+.detail-hero .metric-title.neutral {
+  color: var(--muted);
+}
+
 .hero-copy {
   display: flex;
   flex-direction: column;
@@ -1049,6 +1055,12 @@ h1, h2, h3, h4, h5, h6,
   align-items: end;
 }
 
+/* Move only the commodity select (e.g., the option that shows "Energy") slightly up */
+.scenario-layout .field > select.commodity-select {
+  transform: translateY(-46px);
+  transition: transform 120ms ease;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -1198,13 +1210,17 @@ select:focus {
 }
 
 .source-status.direct {
-  background: rgba(77, 209, 160, 0.12);
-  color: #baf4df;
+  background: linear-gradient(180deg, #38b000, #2f9e61);
+  color: #ffffff;
+  border: 1px solid rgba(47, 158, 97, 0.12);
+  box-shadow: 0 6px 14px rgba(47,158,97,0.12);
 }
 
 .source-status.fallback {
-  background: rgba(255, 159, 67, 0.14);
-  color: #ffd3a8;
+  background: linear-gradient(180deg, #e11d48, #b51218);
+  color: #ffffff;
+  border: 1px solid rgba(181,18,24,0.12);
+  box-shadow: 0 6px 14px rgba(181,18,24,0.12);
 }
 
 .scenario-score-grid {
@@ -1268,6 +1284,14 @@ select:focus {
   padding: 0.5rem 1rem; /* reduced vertical padding to tighten rows */
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.03);
+}
+
+/* Neutral tag style */
+.tag.neutral {
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95));
+  color: #4b3f3a;
+  border: 1px solid rgba(75, 63, 58, 0.06);
+  box-shadow: 0 2px 8px rgba(86, 24, 22, 0.04);
 }
 
 .priority-header {
